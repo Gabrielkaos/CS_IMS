@@ -1,0 +1,3 @@
+.venv
+*.pyc
+IMS_app/migrations/*

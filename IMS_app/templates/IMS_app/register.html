@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'IMS_app/css/login_signup.css' %}">
+</head>
+<body>
+
+  <div class="container">
+    <form method="POST" class="signup-form-box">
+      <h1>Register</h1>
+      {% csrf_token %}
+      
+      <!-- Display non-field errors -->
+      {% if form.non_field_errors %}
+        <div class="error">{{ form.non_field_errors }}</div>
+      {% endif %}
+      
+      <!-- Display field-specific errors -->
+      <div class="input-field">
+        {{ form.username.label }}<br>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="error">{{ form.username.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+      
+      <div class="input-field">
+        {{ form.password1.label }}<br>
+        {{ form.password1 }}
+        {% if form.password1.errors %}
+          <div class="error">{{ form.password1.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+      
+      <div class="input-field">
+        {{ form.password2.label }}<br>
+        {{ form.password2 }}
+        {% if form.password2.errors %}
+          <div class="error">{{ form.password2.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+      
+      <button class="login-btn" type="submit">Register</button>
+      <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </form>
+  </div>
+  
+</body>
+</html>
