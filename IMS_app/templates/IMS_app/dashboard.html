@@ -7,7 +7,7 @@
     <p><strong>Total Students:</strong> {{ total_students }}</p>
 
     <h2>Gender Ratio</h2>
-    <canvas id="genderChart"></canvas>
+    <canvas id="genderChart" height="50"></canvas>
     <ul>
       {% for gender, count in gender_data.items %}
       <li>{{ gender }}: {{ count }}</li>
@@ -17,7 +17,7 @@
 
   <div class="student-stats-container container" style="grid-area: box-2">
     <h2>Students per Year Level</h2>
-    <canvas id="yearLevelChart"></canvas>
+    <canvas id="yearLevelChart" height="30" width="100"></canvas>
     <ul>
       {% for level in year_level_data %}
       <li>Year {{ level.year_level }}: {{ level.count }}</li>
@@ -27,6 +27,7 @@
 
   <div class="age-stats-container container" style="grid-area: box-3">
     <h2>Age Statistics</h2>
+    <canvas id="ageStatsChart" height="50"></canvas>
     <ul>
       <li>Average Age: {{ average_age }}</li>
       <li>Youngest Student Age: {{ min_age }}</li>
@@ -48,11 +49,12 @@
       }]
     },
     options: {
+      radius: '50%',
       cutout: '70%',
       plugins: {
         legend: {
           labels: {
-            color: '#333'
+            color: '#fff'
           }
         },
       }
@@ -60,7 +62,7 @@
   });
 
   const yearLevelChart = new Chart(document.getElementById('yearLevelChart'), {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: [{% for level in year_level_data %}'Year {{ level.year_level }}',{% endfor %}],
       datasets: [{
@@ -76,11 +78,34 @@
       plugins: {
         legend: {
           labels: {
-            color: '#333',
+            color: '#fff',
           }
         },
       }
     }
   });
+  
+  {% comment %} const ageStatsChart = new Chart(document.getElementById('ageStatsChart'),  {
+    type: 'doughnut',
+    data: {
+      labels: [{% for gender, count in gender_data.items %}'{{ gender }}',{% endfor %}],
+      datasets: [{
+        label: 'Gender Ratio',
+        data: [{% for gender, count in gender_data.items %}{{ count }},{% endfor %}],
+        backgroundColor: ['#36A2EB', '#B42B51', '#FFCE56', '#A56E91'],
+      }]
+    },
+    options: {
+      radius: '50%',
+      cutout: '70%',
+      plugins: {
+        legend: {
+          labels: {
+            color: '#fff'
+          }
+        },
+      }
+    }
+  }); {% endcomment %}
 </script>
 {% endblock %}
