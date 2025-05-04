@@ -7,17 +7,12 @@
     <p><strong>Total Students:</strong> {{ total_students }}</p>
 
     <h2>Gender Ratio</h2>
-    <canvas id="genderChart" height="50"></canvas>
-    <ul>
-      {% for gender, count in gender_data.items %}
-      <li>{{ gender }}: {{ count }}</li>
-      {% endfor %}
-    </ul>
+    <canvas id="genderChart" height="1" width="50"></canvas>
   </div>
 
   <div class="student-stats-container container" style="grid-area: box-2">
     <h2>Students per Year Level</h2>
-    <canvas id="yearLevelChart" height="30" width="100"></canvas>
+    <canvas id="yearLevelChart" height="15" width="50"></canvas>
     <ul>
       {% for level in year_level_data %}
       <li>Year {{ level.year_level }}: {{ level.count }}</li>
@@ -27,11 +22,20 @@
 
   <div class="age-stats-container container" style="grid-area: box-3">
     <h2>Age Statistics</h2>
-    <canvas id="ageStatsChart" height="50"></canvas>
+    <canvas id="ageStatsChart" height="85" width"50"></canvas>
     <ul>
-      <li>Average Age: {{ average_age }}</li>
-      <li>Youngest Student Age: {{ min_age }}</li>
-      <li>Oldest Student Age: {{ max_age }}</li>
+      <li>
+        <span>Average Age</span> 
+        {{ average_age }}
+      </li>
+      <li>
+        <span>Youngest Student Age</span>
+        {{ min_age }}
+      </li>
+      <li>
+        <span>Oldest Student Age</span>
+        {{ max_age }}
+      </li>
     </ul>
   </div>
 </div>
@@ -45,7 +49,7 @@
       datasets: [{
         label: 'Gender Ratio',
         data: [{% for gender, count in gender_data.items %}{{ count }},{% endfor %}],
-        backgroundColor: ['#36A2EB', '#B42B51', '#FFCE56', '#A56E91'],
+        backgroundColor: ['#2964d6', '#ff0081', '#FFCE56', '#A56E91'],
       }]
     },
     options: {
@@ -68,7 +72,7 @@
       datasets: [{
         label: 'Students per Year Level',
         data: [{% for level in year_level_data %}{{ level.count }},{% endfor %}],
-        backgroundColor: '#4BC0C0',
+        backgroundColor: ['#4ED7F1', '#6FE6FC', '#A8F1FF', '#FFFA8D'],
       }]
     },
     options: {
@@ -85,27 +89,24 @@
     }
   });
   
-  {% comment %} const ageStatsChart = new Chart(document.getElementById('ageStatsChart'),  {
-    type: 'doughnut',
-    data: {
-      labels: [{% for gender, count in gender_data.items %}'{{ gender }}',{% endfor %}],
-      datasets: [{
-        label: 'Gender Ratio',
-        data: [{% for gender, count in gender_data.items %}{{ count }},{% endfor %}],
-        backgroundColor: ['#36A2EB', '#B42B51', '#FFCE56', '#A56E91'],
-      }]
-    },
-    options: {
-      radius: '50%',
-      cutout: '70%',
-      plugins: {
-        legend: {
-          labels: {
-            color: '#fff'
+  const ageStatsChart = new Chart(document.getElementById('ageStatsChart'),  {
+      type: 'bar',
+      data: {
+        labels: ['agaverage ages', 'minimum age', 'maximum age'],
+        datasets: [{
+          label: 'Student Age Statistics',
+          data: [{{ average_age }}, {{ min_age }}, {{ max_age }}],
+          borderWidth: 1,
+          backgroundColor: ['#626F47', '#A4B465', '#F5ECD5', '#FFFA8D'],
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
           }
-        },
+        }
       }
-    }
-  }); {% endcomment %}
+  });
 </script>
 {% endblock %}
