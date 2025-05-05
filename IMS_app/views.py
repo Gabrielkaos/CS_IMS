@@ -26,7 +26,7 @@ class CustomLoginView(LoginView):
 
 def get_provinces():
     # Load provinces from the local JSON file
-    file_path = os.path.join(os.path.dirname(__file__), 'api/provinces.json')
+    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/provinces.json')
     with open(file_path, 'r') as file:
         provinces = json.load(file)
 
@@ -37,7 +37,7 @@ def get_provinces():
 def get_province_code(name):
     if not name:
         return ""
-    file_path = os.path.join(os.path.dirname(__file__), 'api/provinces.json')
+    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/provinces.json')
     with open(file_path, 'r') as file:
         provinces = json.load(file)
     for province in provinces:
@@ -48,7 +48,7 @@ def get_province_code(name):
 def get_city_code(name):
     if not name:
         return ""
-    file_path = os.path.join(os.path.dirname(__file__), 'api/cities-municipalities.json')
+    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/cities-municipalities.json')
     with open(file_path, 'r') as file:
         cities = json.load(file)
     for city in cities:
@@ -59,7 +59,7 @@ def get_city_code(name):
 def get_barangay_code(name):
     if not name:
         return ""
-    file_path = os.path.join(os.path.dirname(__file__), 'api/barangays.json')
+    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/barangays.json')
     with open(file_path, 'r') as file:
         barangays = json.load(file)
     for barangay in barangays:
