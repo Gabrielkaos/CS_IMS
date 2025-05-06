@@ -18,8 +18,8 @@
       
       <!-- Display field-specific errors -->
       <div class="input-field">
-        {{ form.username.label }}<br>
-        {{ form.username }}
+        <!-- {{ form.username.label }}<br>
+        {{ form.username }} -->
 
         <label for="username">Username</label>
         <input name="username" id="username" type="text" required>
@@ -28,7 +28,7 @@
       
       <div class="input-field">
         <label for="password">Password</label>
-        <input name="password" id="password" type="text" required>
+        <input name="password" id="password" type="password" required>
         
       </div>
       
@@ -40,9 +40,9 @@
       </div>
 
       <!-- Display non-field errors -->
-      {% if form.non_field_errors %}
+      <!-- {% if form.non_field_errors %}
         <div class="error">{{ form.non_field_errors }}</div>
-      {% endif %}
+      {% endif %} -->
       
       <button class="login-btn" type="submit">Login</button>
       <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>

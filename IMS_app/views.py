@@ -6,14 +6,9 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.files.storage import FileSystemStorage
-import pandas as pd
 from django.core.serializers.json import DjangoJSONEncoder
 import json
-import requests
 import openpyxl
-from django.contrib.auth.forms import UserCreationForm
-# from django.urls import reverse_lazy
 import os
 
 def get_provinces():
@@ -113,23 +108,42 @@ def upload_excel(request):
             return redirect('student_list')
     else:
         form = UploadFileForm(request.POST, request.FILES)
-        print("Hello there 2")
+        # print("Hello the/re 2")
     return redirect('student_list')
 
 # Accounts
 def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Registered successfully.')
-            return redirect('dashboard')
+    # print("Hello")
+    if request.method == "POST":
+        # print("HGello")
+        username = request.POST["username"]
+        password = request.POST["password"]
+        password2 = request.POST["password2"]
+
+        role = request.POST["role"]
+
+        if password != password2:
+            messages.error(request, "Wrong password confirmation")
+            return redirect("register")
+
+        user, created = User.objects.get_or_create(username=username)
+
+        if created:
+            user.set_password(password)
+            user.is_staff = True
+            if role=="admin":
+                user.is_superuser = True
+            else:
+                user.is_superuser = False
+            user.save()
+            messages.success(request, "User created")
+            return render(request, "IMS_app/login.html")
+
         else:
-            messages.error(request, 'Registration failed. Please correct the errors below.')
-    else:
-        form = UserCreationForm()
-    return render(request, 'IMS_app/register.html', {'form': form})
+            messages.error(request, "User already exists")
+            return redirect("register")
+
+    return render(request, "IMS_app/register.html")
 
 def loginView(request):
     if request.method == 'POST':
