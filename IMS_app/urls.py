@@ -16,12 +16,12 @@ Including another URLconf
 """
 from django.urls import path
 from django.contrib.auth.views import LogoutView
-from .views import CustomLoginView, register, dashboard, calendar_view, upload_excel, student_list, student_create, student_update, student_delete, student_info
+from .views import CustomLoginView, register, dashboard, calendar_view, upload_excel, student_list, student_create, student_update, student_delete, student_info, logoutView
 
 urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('register/', register, name='register'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('logout/', logoutView, name='logout'),
     path('', dashboard, name='dashboard'),
     path('calendar/', calendar_view, name="calendar"),
     path('upload-excel/', upload_excel, name='upload_excel'),

@@ -8,7 +8,6 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'IMS_app/css/login_signup.css' %}">
     
-  </style>
 </head>
 <body>
 
@@ -34,6 +33,13 @@
         {% endif %}
       </div>
       
+      <div class="input-field">
+        <select name="role" required>
+            <option value="admin">Admin</option>
+            <option value="student">Student</option>
+        </select>
+      </div>
+
       <!-- Display non-field errors -->
       {% if form.non_field_errors %}
         <div class="error">{{ form.non_field_errors }}</div>

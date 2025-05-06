@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student
 from django.contrib.auth import authenticate, login, logout
 from .forms import StudentForm, UploadFileForm
-from django.db.models import Count, Avg, Min, Max
+from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,7 @@ import os
 
 class CustomLoginView(LoginView):
     template_name = 'IMS_app/login.html'
-    success_url = reverse_lazy('dashboard')  # Replace 'dashboard' with your desired URL name
+    success_url = reverse_lazy('dashboard') 
 
     def get_success_url(self):
         return self.success_url
@@ -143,6 +143,8 @@ def loginView(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        role = request.POST['role']
+        print(role)
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -198,7 +200,7 @@ def dashboard(request):
 
 def student_info(request, pk):
     student = get_object_or_404(Student, pk=pk)
-    print('Student!!!!!!!!!!!!!:',student)
+    # print('Student!!!!!!!!!!!!!:',student)
     return render(request, 'IMS_app/student_other_info.html', {'student': student})
 
 @login_required
@@ -244,3 +246,9 @@ def student_delete(request, pk):
         student.delete()
         return redirect('student_list')
     return render(request, 'IMS_app/student_confirm_delete.html', {'student': student})
+
+def logoutView(req):
+
+    logout(req)
+    
+    return redirect("login")
