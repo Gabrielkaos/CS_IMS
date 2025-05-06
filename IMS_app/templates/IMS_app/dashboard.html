@@ -1,9 +1,8 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
-<h1 style="color: #333; margin-bottom: 1em">CS Information Management</h1>
+<h1 style="color: #333; margin-bottom: 1em; margin-left: 8px">CS Information Management</h1>
 
 <div class="wrapper">
   <div class="gender-stats-container container" style="grid-area: box-1">
-    <h1>Student Dashboard</h1>
     <p><strong>Total Students:</strong> {{ total_students }}</p>
 
     <h2>Gender Ratio</h2>
@@ -11,7 +10,6 @@
   </div>
 
   <div class="student-stats-container container" style="grid-area: box-2">
-    <h2>Students per Year Level</h2>
     <canvas id="yearLevelChart" height="15" width="50"></canvas>
     <ul>
       {% for level in year_level_data %}
@@ -21,20 +19,25 @@
   </div>
 
   <div class="age-stats-container container" style="grid-area: box-3">
-    <h2>Age Statistics</h2>
     <canvas id="ageStatsChart" height="80" width"50"></canvas>
     <ul>
       <li>
-        <span>Average Age</span> 
-        {{ average_age }}
+        <a href="">
+          <span>Average Age</span> 
+          {{ average_age }}
+        </a>
       </li>
       <li>
-        <span>Youngest Student Age</span>
-        {{ min_age }}
+        <a href="">
+          <span>Youngest Student Age</span>
+          {{ min_age }}
+        </a>
       </li>
       <li>
-        <span>Oldest Student Age</span>
-        {{ max_age }}
+        <a href="">
+          <span>Oldest Student Age</span>
+          {{ max_age }}
+        </a>
       </li>
     </ul>
   </div>

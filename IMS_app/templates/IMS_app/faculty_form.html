@@ -1,11 +1,16 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
 <div>
-    <form method="post" class="modal-content">
+    <form method="post" class="modal-content container">
         {% csrf_token %}
             
         <div class="modal-content-container" style="grid-area: info1">
-            <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Faculty</h2>
+            <div class="header">
+                <button class="back-button" onclick="window.location.href='{% url 'faculty_list' %}'">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                </button>
+                <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Faculty</h2>
+            </div>
             <h3>Personal Info</h3>
 
             {{ form.first_name.label }} {{ form.first_name }}
