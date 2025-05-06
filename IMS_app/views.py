@@ -145,9 +145,6 @@ def loginView(request):
             messages.error(request, 'Invalid credentials.')
     return render(request, 'IMS_app/login.html')
 
-def logoutView(request):
-    logout(request)
-    return redirect('login')
 
 @login_required
 def dashboard(request):
