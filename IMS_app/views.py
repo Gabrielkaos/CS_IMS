@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student
+from .models import Student, Faculty
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm
+from .forms import StudentForm, UploadFileForm, FacultyForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -66,6 +66,46 @@ def calendar_view(request):
     return render(request, "IMS_app/calendar.html", {
         "birthdays_json": json.dumps(birthdays, cls=DjangoJSONEncoder)
     })
+
+def upload_faculty(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['files']
+            wb = openpyxl.load_workbook(excel_file)
+            sheet = wb.active
+
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                first_name, middle_name, last_name, employee_id, email, date_of_birth,gender,phone_number, current_province, \
+                    current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
+                emergency_contact_phone, emergency_contact_relation = row
+                Faculty.objects.create(
+                    first_name=first_name,
+                    middle_name=middle_name,
+                    last_name=last_name,
+                    employee_id=employee_id,
+                    email=email,
+                    date_of_birth=date_of_birth,
+                    gender=gender[0].upper(),
+                    phone_number=phone_number,
+                    current_province_code=get_province_code(current_province.title()),
+                    current_city_code=get_city_code(current_city.title()),
+                    current_barangay_code=get_barangay_code(current_barangay.title()),
+ 
+                    permanent_province_code=get_province_code(permanent_province.title()),
+                    permanent_city_code=get_city_code(permanent_city.title()),
+                    permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
+                    emergency_contact_name=emergency_contact_name.title(),
+                    emergency_contact_phone=emergency_contact_phone,
+                    emergency_contact_relation=emergency_contact_relation[0].upper()
+                )
+            messages.success(request, "Excel file uploaded successfully!")
+            return redirect('faculty_list')
+    else:
+        form = UploadFileForm(request.POST, request.FILES)
+        # print("Hello the/re 2")
+    return redirect('faculty_list')
+
 
 def upload_excel(request):
     if request.method == 'POST':
@@ -206,11 +246,20 @@ def student_info(request, pk):
     # print('Student!!!!!!!!!!!!!:',student)
     return render(request, 'IMS_app/student_other_info.html', {'student': student})
 
+def faculty_info(request, pk):
+    faculty = get_object_or_404(Faculty, pk=pk)
+    return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty})
+
 @login_required
 def student_list(request):
     students = Student.objects.all()
     form = UploadFileForm()
     return render(request, 'IMS_app/student_list.html', {'students': students, 'form':form})
+@login_required
+def faculty_list(request):
+    faculties = Faculty.objects.all()
+    form = UploadFileForm()
+    return render(request, 'IMS_app/faculty_list.html', {'faculties': faculties, 'form':form})
 
 @login_required
 def student_create(request):
@@ -227,6 +276,19 @@ def student_create(request):
     return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
 
 @login_required
+def faculty_create(request):
+    provinces = get_provinces()
+    if request.method == 'POST':
+        form = FacultyForm(request.POST, provinces=provinces)
+        if form.is_valid():
+            form.save()
+            return redirect('faculty_list')
+    else:
+        form = StudentForm(provinces=provinces)
+    return render(request, 'IMS_app/faculty_form.html', {'form': form, 'provinces': provinces})
+
+
+@login_required
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
     provinces = get_provinces()
@@ -241,6 +303,18 @@ def student_update(request, pk):
         form = StudentForm(instance=student, provinces=provinces)
     return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
 
+@login_required
+def faculty_update(request, pk):
+    faculty = get_object_or_404(Faculty, pk=pk)
+    provinces = get_provinces()
+    if request.method == 'POST':
+        form = FacultyForm(request.POST, instance=faculty, provinces=provinces)
+        if form.is_valid():
+            form.save()
+            return redirect('faculty_list')
+    else:
+        form = FacultyForm(instance=faculty, provinces=provinces)
+    return render(request, 'IMS_app/faculty_form.html', {'form': form, 'provinces': provinces})
 
 @login_required
 def student_delete(request, pk):
@@ -249,6 +323,13 @@ def student_delete(request, pk):
         student.delete()
         return redirect('student_list')
     return render(request, 'IMS_app/student_confirm_delete.html', {'student': student})
+
+def faculty_delete(request, pk):
+    faculty = get_object_or_404(Faculty, pk=pk)
+    if request.method == 'POST':
+        faculty.delete()
+        return redirect('faculty_list')
+    return render(request, 'IMS_app/faculty_confirm_delete.html', {'faculty': faculty})
 
 def logoutView(req):
 
