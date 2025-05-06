@@ -22,29 +22,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.classList.remove("no-scroll");
       }
     });
-
-    ///////////////////////////////////////////////////////////////////////////////
-    const modal1 = document.getElementById("attendanceModal");
-    const openModalBtn1 = document.getElementById("openModalBtn");
-    const closeModalBtn1 = document.getElementById("closeModalBtn");
-
-    // Open the modal
-    openModalBtn1.addEventListener("click", function() {
-      modal1.style.display = "flex";
-      document.body.classList.add("no-scroll");
-    });
-
-    closeModalBtn1.addEventListener("click", function() {
-      modal1.style.display = "none";
-      document.body.classList.remove("no-scroll");
-    });
-
-    window.addEventListener("click", function(event) {
-      if (event.target == modal1) {
-        modal1.style.display = "none";
-        document.body.classList.remove("no-scroll");
-      }
-    });
     
   });
 
