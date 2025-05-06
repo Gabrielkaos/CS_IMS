@@ -13,16 +13,28 @@ import json
 import requests
 import openpyxl
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+# from django.urls import reverse_lazy
 import os
 
-class CustomLoginView(LoginView):
-    template_name = 'IMS_app/login.html'
-    success_url = reverse_lazy('dashboard') 
+def loginView(request):
+    if request.method=="POST":
+        username = request.POST["username"]
+        password = request.POST['password']
+        role = request.POST['role']
+        print(username,password,role)
+        user = authenticate(request, username=username, password=password)
 
-    def get_success_url(self):
-        return self.success_url
+        if user is not None:
+            login(request, user)
+            return redirect(
+                "attendance_app:events"
+            ) 
+        else:
+            messages.error(request, "Invalid username or password.")
+        print(username,password, role)
+        login(requests)
+        return render(requests,"IMS_app/dashboard.html")
+    return render(requests,"IMS_app/login.html")
 
 def get_provinces():
     # Load provinces from the local JSON file
@@ -250,5 +262,5 @@ def student_delete(request, pk):
 def logoutView(req):
 
     logout(req)
-    
+
     return redirect("login")

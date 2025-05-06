@@ -20,17 +20,16 @@
       <div class="input-field">
         {{ form.username.label }}<br>
         {{ form.username }}
-        {% if form.username.errors %}
-          <div class="error">{{ form.username.errors|join:", " }}</div>
-        {% endif %}
+
+        <label for="username">Username</label>
+        <input name="username" id="username" type="text" required>
+        
       </div>
       
       <div class="input-field">
-        {{ form.password.label }}<br>
-        {{ form.password }}
-        {% if form.password.errors %}
-          <div class="error">{{ form.password.errors|join:", " }}</div>
-        {% endif %}
+        <label for="password">Password</label>
+        <input name="password" id="password" type="text" required>
+        
       </div>
       
       <div class="input-field">
