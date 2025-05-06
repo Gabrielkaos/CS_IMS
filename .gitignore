@@ -2,3 +2,4 @@
 *.pyc
 IMS_app/migrations/*
 *.sqlite3
+db.sqlite3

@@ -16,26 +16,6 @@ from django.contrib.auth.forms import UserCreationForm
 # from django.urls import reverse_lazy
 import os
 
-def loginView(request):
-    if request.method=="POST":
-        username = request.POST["username"]
-        password = request.POST['password']
-        role = request.POST['role']
-        print(username,password,role)
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect(
-                "attendance_app:events"
-            ) 
-        else:
-            messages.error(request, "Invalid username or password.")
-        print(username,password, role)
-        login(requests)
-        return render(requests,"IMS_app/dashboard.html")
-    return render(requests,"IMS_app/login.html")
-
 def get_provinces():
     # Load provinces from the local JSON file
     file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/provinces.json')
