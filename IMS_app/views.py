@@ -54,18 +54,6 @@ def get_barangay_code(name):
             return barangay.get("code", "")
     return ""
 
-def calendar_view(request):
-    students = Student.objects.all()
-    birthdays = [
-        {
-            "name": student.name,
-            "date": student.date_of_birth.strftime('%Y-%m-%d')
-        }
-        for student in students
-    ]
-    return render(request, "IMS_app/calendar.html", {
-        "birthdays_json": json.dumps(birthdays, cls=DjangoJSONEncoder)
-    })
 
 def upload_faculty(request):
     if request.method == 'POST':
