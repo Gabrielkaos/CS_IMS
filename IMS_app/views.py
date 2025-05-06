@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student, Faculty
+from .models import Student, Faculty, Course
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, CourseForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.serializers.json import DjangoJSONEncoder
 import json
 import openpyxl
 import os
@@ -240,6 +239,10 @@ def faculty_info(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
     return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty})
 
+def course_info(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    return render(request, 'IMS_app/course_info.html', {'course': course})
+
 @login_required
 def student_list(request):
     students = Student.objects.all()
@@ -250,6 +253,11 @@ def faculty_list(request):
     faculties = Faculty.objects.all()
     form = UploadFileForm()
     return render(request, 'IMS_app/faculty_list.html', {'faculties': faculties, 'form':form})
+
+@login_required
+def course_list(request):
+    coursies = Course.objects.all()
+    return render(request, 'IMS_app/course_list.html', {'coursies': coursies})
 
 @login_required
 def student_create(request):
@@ -264,6 +272,43 @@ def student_create(request):
     else:
         form = StudentForm(provinces=provinces)
     return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
+
+@login_required
+def course_create(request):
+    instructors = Faculty.objects.all()
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            # print('create form cleaned:',form.cleaned_data)
+            form1 = form.save(commit=False)
+            instructor = Faculty.objects.get(id=request.POST["faculties"])
+            print(request.POST["faculties"])
+            form1.instructor = instructor
+            # print("This is the form",form)
+            form1.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm()
+    return render(request, 'IMS_app/course_form.html', {'form': form, 'instructors':instructors})
+
+@login_required
+def course_update(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    instructors = Faculty.objects.all()
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            # print('update form cleaned:',form.cleaned_data)
+            form1 = form.save(commit=False)
+            instructor = Faculty.objects.get(id=request.POST["faculties"])
+            print(request.POST["faculties"])
+            form1.instructor = instructor
+            # print("This is the form",form)
+            form1.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'IMS_app/course_form.html', {'form': form,"instructors":instructors})
 
 @login_required
 def faculty_create(request):
@@ -320,6 +365,13 @@ def faculty_delete(request, pk):
         faculty.delete()
         return redirect('faculty_list')
     return render(request, 'IMS_app/faculty_confirm_delete.html', {'faculty': faculty})
+
+def course_delete(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('course_list')
+    return render(request, 'IMS_app/course_confirm_delete.html', {'course': course})
 
 def logoutView(req):
 

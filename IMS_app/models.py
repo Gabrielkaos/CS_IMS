@@ -3,6 +3,10 @@ import json
 from django.db import models
 from django.contrib.auth.models import User
 
+
+
+
+    
 class Faculty(models.Model):
 
     GENDER_CHOICES = [
@@ -122,3 +126,13 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.name} ({self.student_id})"
 
+class Course(models.Model):
+    course_code = models.CharField(max_length=10, unique=True)  
+    title = models.CharField(max_length=100)      
+    description = models.TextField(blank=True)
+    units = models.PositiveIntegerField(default=3)
+    instructor = models.ForeignKey('Faculty', on_delete=models.SET_NULL, null=True, blank=True, related_name='courses')
+
+
+    def __str__(self):
+        return f"{self.course_code} - {self.title}"

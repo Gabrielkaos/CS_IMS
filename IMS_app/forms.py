@@ -1,6 +1,16 @@
 from django import forms
-from .models import Student, Faculty
+from .models import Student, Faculty, Course
 
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['course_code', 'title', 'description', 'units']
+        widgets = {
+            'course_code': forms.TextInput(),
+            'title': forms.TextInput(),
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'units': forms.NumberInput()
+        }
 
 class UploadFileForm(forms.Form):
     files = forms.FileField()
