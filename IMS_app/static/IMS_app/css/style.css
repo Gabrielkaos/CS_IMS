@@ -163,6 +163,7 @@ main p {
 .container {
     border-radius: 1.5em;
     padding: 2em 3em;
+    color: var(--primary-color);
 
     h2 {
         margin-top: 1em;
