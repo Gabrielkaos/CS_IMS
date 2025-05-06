@@ -158,11 +158,13 @@ def register(request):
 
         if created:
             user.set_password(password)
-            user.is_staff = True
+            
             if role=="admin":
                 user.is_superuser = True
+                user.is_staff = True
             else:
                 user.is_superuser = False
+                user.is_staff = False
             user.save()
             messages.success(request, "User created")
             return render(request, "IMS_app/login.html")
@@ -272,7 +274,7 @@ def faculty_create(request):
             form.save()
             return redirect('faculty_list')
     else:
-        form = StudentForm(provinces=provinces)
+        form = FacultyForm(provinces=provinces)
     return render(request, 'IMS_app/faculty_form.html', {'form': form, 'provinces': provinces})
 
 
