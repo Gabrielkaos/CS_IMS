@@ -532,10 +532,8 @@ textarea[readonly]  {
     }
     #sidebar, .top-container {
         z-index: 1;
-        margin-right: 1em;
-        height: 60px;
+        height: 80px;
         width: 100%;
-        border-top: 1px solid var(--line-color);
         border-radius: 0;
         padding: 0;
         position: fixed;
