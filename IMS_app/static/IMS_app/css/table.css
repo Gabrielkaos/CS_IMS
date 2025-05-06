@@ -4,9 +4,14 @@
     --head-color: #8868e7;
     --line-color: #42434a;
     --table-hover-color: #cecece;
-    --table-text-color: #333;
+    --table-text-color: #000000;
 }
 
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f3f3;
+    color: var(--table-text-color);
+}
 /* Table Design */
 .table {
     border-collapse: collapse;

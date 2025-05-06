@@ -1,10 +1,11 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
-
-    <h2 class="mb-3">Confirm Deletion</h2>
-    <p>Are you sure you want to delete <strong>{{ faculty.name }}</strong> ({{ faculty.employee_id }})?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a href="{% url 'faculty_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <div class="confirm_del_container">
+        <h2 >Confirm Deletion</h2>
+        <p>Are you sure you want to delete <strong>{{ faculty.name }}</strong> ({{ faculty.employee_id }})?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, delete</button>
+            <button onclick="window.location.href='{% url 'faculty_list' %}'">Cancel</button>
+        </form>
+    </div>
 {% endblock %}
