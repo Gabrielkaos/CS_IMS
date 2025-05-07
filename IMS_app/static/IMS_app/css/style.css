@@ -547,7 +547,7 @@ label {
 }
 
 input[readonly],
-textarea{
+textarea {
     font-size: 16px;
     height: 30px;
     width: 100%;
@@ -560,6 +560,11 @@ textarea{
     border-left: 3px solid var(--accent-color);
     pointer-events: none;
     color: var(--line-color);
+
+}
+
+textarea {
+    height: 50px;
 }
 
 .form-group {
