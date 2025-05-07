@@ -374,25 +374,19 @@ def faculty_update(request, pk):
 @login_required
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
-    if request.method == 'POST':
-        student.delete()
-        return redirect('student_list')
-    return render(request, 'IMS_app/student_confirm_delete.html', {'student': student})
+    student.delete()
+    return redirect('student_list')
 
 
 def faculty_delete(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
-    if request.method == 'POST':
-        faculty.delete()
-        return redirect('faculty_list')
-    return render(request, 'IMS_app/faculty_confirm_delete.html', {'faculty': faculty})
+    faculty.delete()
+    return redirect('faculty_list')
 
 def subject_delete(request, pk):
     course = get_object_or_404(Subject, pk=pk)
-    if request.method == 'POST':
-        course.delete()
-        return redirect('subject_list')
-    return render(request, 'IMS_app/subject_confirm_delete.html', {'course': course})
+    course.delete()
+    return redirect('subject_list')
 
 
 def course_list(request):
