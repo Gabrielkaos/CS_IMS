@@ -34,7 +34,7 @@ body {
 #sidebar {
     box-sizing: border-box;
     height: 100vh;
-    width: 250px;
+    width: 300px;
     padding: 5px 1em;
     background-color: var(--secondary-color);
     color: var(--text-color);
@@ -139,6 +139,7 @@ body {
 /* <===== MAIN =====> */
 main {
     padding: min(30px, 7%);
+    background-color: var(--primary-color);
 }
 
 main p {
@@ -595,9 +596,9 @@ textarea {
     main {
         padding: 2em 1em 60px 1em;
     }
-    #sidebar, .top-container {
+    #sidebar {
         z-index: 1;
-        height: 80px;
+        height: 70px;
         width: 100%;
         border-radius: 0;
         padding: 0;
@@ -627,13 +628,6 @@ textarea {
         ul li span, ul li:first-child {
             display: none;
         }
-    }
-    .sidebar-spacer {
-        height: 50px;
-        border-right: 2px solid var(--primary-color);
-        border-bottom: none;
-        margin-top: 5px;
-        margin-bottom: 5px;
     }
     .wrapper {
         grid-template-columns: 150px 150px;
