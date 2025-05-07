@@ -546,7 +546,8 @@ label {
     color: var(--line-color);
 }
 
-input[readonly]{
+input[readonly],
+textarea{
     font-size: 16px;
     height: 30px;
     width: 100%;
