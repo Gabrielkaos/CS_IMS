@@ -63,29 +63,34 @@ def upload_faculty(request):
             sheet = wb.active
 
             for row in sheet.iter_rows(min_row=2, values_only=True):
+                if None in list(row):
+                    continue
                 first_name, middle_name, last_name, employee_id, email, date_of_birth,gender,phone_number, current_province, \
                     current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
                 emergency_contact_phone, emergency_contact_relation = row
-                Faculty.objects.create(
-                    first_name=first_name,
-                    middle_name=middle_name,
-                    last_name=last_name,
-                    employee_id=employee_id,
-                    email=email,
-                    date_of_birth=date_of_birth,
-                    gender=gender[0].upper(),
-                    phone_number=phone_number,
-                    current_province_code=get_province_code(current_province.title()),
-                    current_city_code=get_city_code(current_city.title()),
-                    current_barangay_code=get_barangay_code(current_barangay.title()),
- 
-                    permanent_province_code=get_province_code(permanent_province.title()),
-                    permanent_city_code=get_city_code(permanent_city.title()),
-                    permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
-                    emergency_contact_name=emergency_contact_name.title(),
-                    emergency_contact_phone=emergency_contact_phone,
-                    emergency_contact_relation=emergency_contact_relation[0].upper()
-                )
+                try:
+                    Faculty.objects.create(
+                        first_name=first_name,
+                        middle_name=middle_name,
+                        last_name=last_name,
+                        employee_id=employee_id,
+                        email=email,
+                        date_of_birth=date_of_birth,
+                        gender=gender[0].upper(),
+                        phone_number=phone_number,
+                        current_province_code=get_province_code(current_province.title()),
+                        current_city_code=get_city_code(current_city.title()),
+                        current_barangay_code=get_barangay_code(current_barangay.title()),
+    
+                        permanent_province_code=get_province_code(permanent_province.title()),
+                        permanent_city_code=get_city_code(permanent_city.title()),
+                        permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
+                        emergency_contact_name=emergency_contact_name.title(),
+                        emergency_contact_phone=emergency_contact_phone,
+                        emergency_contact_relation=emergency_contact_relation[0].upper()
+                    )
+                except:
+                    continue
             messages.success(request, "Excel file uploaded successfully!")
             return redirect('faculty_list')
     else:
@@ -109,31 +114,37 @@ def upload_excel(request):
             for row in sheet.iter_rows(min_row=2, values_only=True):
                 first_name, middle_name, last_name, student_id, year_level, status, email, date_of_birth,gender,phone_number, current_province, current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
                 emergency_contact_phone, emergency_contact_relation, course = row
-                Student.objects.create(
-                    first_name=first_name,
-                    middle_name=middle_name,
-                    last_name=last_name,
-                    student_id=student_id,
-                    year_level=year_level,
-                    status=status,
-                    email=email,
-                    date_of_birth=date_of_birth,
-                    course=Course.objects.get(name=course.upper()),
-                    gender=gender[0].upper(),
-                    phone_number=phone_number,
-                    current_province_code=get_province_code(current_province.title()),
-                    current_city_code=get_city_code(current_city.title()),
-                    current_barangay_code=get_barangay_code(current_barangay.title()),
- 
-                    permanent_province_code=get_province_code(permanent_province.title()),
-                    permanent_city_code=get_city_code(permanent_city.title()),
-                    permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
-                    emergency_contact_name=emergency_contact_name.title(),
-                    emergency_contact_phone=emergency_contact_phone,
-                    emergency_contact_relation=emergency_contact_relation[0].upper()
-                )
+                if None in list(row):
+                    continue
+                try:
+                    Student.objects.create(
+                        first_name=first_name,
+                        middle_name=middle_name,
+                        last_name=last_name,
+                        student_id=student_id,
+                        year_level=year_level,
+                        status=status,
+                        email=email,
+                        date_of_birth=date_of_birth,
+                        course=Course.objects.get(name=course.upper()),
+                        gender=gender[0].upper(),
+                        phone_number=phone_number,
+                        current_province_code=get_province_code(current_province.title()),
+                        current_city_code=get_city_code(current_city.title()),
+                        current_barangay_code=get_barangay_code(current_barangay.title()),
+    
+                        permanent_province_code=get_province_code(permanent_province.title()),
+                        permanent_city_code=get_city_code(permanent_city.title()),
+                        permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
+                        emergency_contact_name=emergency_contact_name.title(),
+                        emergency_contact_phone=emergency_contact_phone,
+                        emergency_contact_relation=emergency_contact_relation[0].upper()
+                    )
+                except:
+                    continue
             messages.success(request, "Excel file uploaded successfully!")
             return redirect('student_list')
+                
     else:
         form = UploadFileForm(request.POST, request.FILES)
         # print("Hello the/re 2")
@@ -272,7 +283,7 @@ def student_create(request):
         form = StudentForm(request.POST, provinces=provinces)
         if form.is_valid():
             form1 = form.save(commit=False)
-            course = Faculty.objects.get(id=request.POST["course"])
+            course = Course.objects.get(id=request.POST["course"])
             form1.course = course
             form1.save()
             return redirect('student_list')

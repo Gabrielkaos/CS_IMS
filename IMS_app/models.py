@@ -67,7 +67,7 @@ class Faculty(models.Model):
     
     
     def __str__(self):
-        return f"{self.name} ({self.student_id})"
+        return f"{self.name} ({self.employee_id})"
 
 class Student(models.Model):
 
