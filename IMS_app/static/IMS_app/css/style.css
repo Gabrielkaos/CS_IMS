@@ -569,7 +569,7 @@ textarea {
 .other-student-form-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 280px 280px;
+    grid-template-rows: 320px 320px;
     grid-template-areas:
         "box1 box3"
         "box2 box4"
