@@ -1,98 +1,104 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-<h2 style="margin-left: 2em">{{ student.first_name }}'s Full Details</h2>
-<form class="other-student-form-container">
-  <div class="container" style="grid-area: box1">
-    <div class="form-group">
-      <label>First Name</label>
-      <input type="text" value="{{ student.first_name }}" readonly />
+  <form class="other-student-form-container">
+    <div class="container" style="grid-area: box1">
+      <div class="header">
+        <button class="back-button" onclick="window.location.href='{% url 'faculty_list' %}'">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+        </button>
+        <h2 style="margin-left: 2em">{{ student.first_name }}'s Full Details</h2>
+      </div>
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" value="{{ student.first_name }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Middle Name</label>
+        <input type="text" value="{{ student.middle_name }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" value="{{ student.last_name }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Student ID</label>
+        <input type="text" value="{{ student.student_id }}" readonly />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Middle Name</label>
-      <input type="text" value="{{ student.middle_name }}" readonly />
-    </div>
-    <div class="form-group">
-      <label>Last Name</label>
-      <input type="text" value="{{ student.last_name }}" readonly />
-    </div>
-    <div class="form-group">
-      <label>Student ID</label>
-      <input type="text" value="{{ student.student_id }}" readonly />
-    </div>
-  </div>
 
-  <div class="container" style="grid-area: box2">
-    <div class="form-group">
-      <label>Year Level</label>
-      <input
-        type="text"
-        value="{{ student.get_year_level_display }}"
-        readonly
-      />
+    <div class="container" style="grid-area: box2">
+      <div class="form-group">
+        <label>Year Level</label>
+        <input
+          type="text"
+          value="{{ student.get_year_level_display }}"
+          readonly
+        />
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <input type="text" value="{{ student.status }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" value="{{ student.email }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Date of Birth</label>
+        <input type="text" value="{{ student.date_of_birth }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Gender</label>
+        <input type="text" value="{{ student.get_gender_display }}" readonly />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Status</label>
-      <input type="text" value="{{ student.status }}" readonly />
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" value="{{ student.email }}" readonly />
-    </div>
-    <div class="form-group">
-      <label>Date of Birth</label>
-      <input type="text" value="{{ student.date_of_birth }}" readonly />
-    </div>
-    <div class="form-group">
-      <label>Gender</label>
-      <input type="text" value="{{ student.get_gender_display }}" readonly />
-    </div>
-  </div>
 
-  <div class="container" style="grid-area: box3">
-    <div class="form-group">
-      <label>Phone Number</label>
-      <input type="text" value="{{ student.phone_number }}" readonly />
+    <div class="container" style="grid-area: box3">
+      <div class="header"></div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" value="{{ student.phone_number }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Current Address</label>
+        <textarea class="address-input" readonly>
+  {{ student.current_address }}</textarea
+        >
+      </div>
+      <div class="form-group">
+        <label>Permanent Address</label>
+        <textarea class="address-input" readonly>
+  {{ student.permanent_address }}</textarea
+        >
+      </div>
     </div>
-    <div class="form-group">
-      <label>Current Address</label>
-      <textarea class="address-input" readonly>
-{{ student.current_address }}</textarea
-      >
-    </div>
-    <div class="form-group">
-      <label>Permanent Address</label>
-      <textarea class="address-input" readonly>
-{{ student.permanent_address }}</textarea
-      >
-    </div>
-  </div>
 
-  <div class="container" style="grid-area: box4">
-    <div class="form-group">
-      <label>Emergency Contact Name</label>
-      <input
-        type="text"
-        value="{{ student.emergency_contact_name }}"
-        readonly
-      />
+    <div class="container" style="grid-area: box4">
+      <div class="form-group">
+        <label>Emergency Contact Name</label>
+        <input
+          type="text"
+          value="{{ student.emergency_contact_name }}"
+          readonly
+        />
+      </div>
+      <div class="form-group">
+        <label>Emergency Contact Phone</label>
+        <input
+          type="text"
+          value="{{ student.emergency_contact_phone }}"
+          readonly
+        />
+      </div>
+      <div class="form-group">
+        <label>Emergency Contact Relation</label>
+        <input
+          type="text"
+          value="{{ student.get_emergency_contact_relation_display }}"
+          readonly
+        />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Emergency Contact Phone</label>
-      <input
-        type="text"
-        value="{{ student.emergency_contact_phone }}"
-        readonly
-      />
-    </div>
-    <div class="form-group">
-      <label>Emergency Contact Relation</label>
-      <input
-        type="text"
-        value="{{ student.get_emergency_contact_relation_display }}"
-        readonly
-      />
-    </div>
-  </div>
-</form>
+  </form>
 
 {% endblock content %}
