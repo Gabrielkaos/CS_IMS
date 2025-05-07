@@ -3,3 +3,5 @@
 IMS_app/migrations/*
 *.sqlite3
 db.sqlite3
+IMS_app/*.sqlite3
+CS_IMS/*.sqlite3
