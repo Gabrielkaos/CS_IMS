@@ -2,8 +2,17 @@
 
 <h1 style="color: #333; margin-bottom: 1em">Courses</h1>
 
+<div class="cards-wrapper">
+    {% for course in coursies %}
+    <div class="card-container">
+      <span class="card-title"><h1>{{ course.name }}</h1></span>
+      <span class="card-discreption">{{ course.description }}</span>
+      <span>{{ course.students.count }}</span>
+    </div>
+    {% endfor %}
+</div>
 
-<table id="students" class="table">
+{% comment %} <table id="students" class="table">
   <thead>
     <tr>
       <th data-title="Name">Name</th>
@@ -20,7 +29,7 @@
     </tr>
     {% endfor %}
   </tbody>
-</table>
+</table> {% endcomment %}
 
 <script>
   $(document).ready(function () {

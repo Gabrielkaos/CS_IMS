@@ -20,6 +20,7 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     word-break: break-word;
     color: var(--table-text-color);
+    border-radius: .5em;
 }
 
 .table tr {
@@ -32,6 +33,14 @@ body {
     text-align: left;
     font-weight: bold;
     font-size: 1.15em;
+}
+
+.table thead th:first-child {
+    border-top-left-radius: .5em;
+}
+
+.table thead th:last-child {
+    border-top-right-radius: .5em;
 }
 
 .table tr:nth-child(n+11) { 
