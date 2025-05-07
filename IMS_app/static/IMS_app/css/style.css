@@ -584,7 +584,7 @@ textarea:focus {
 .other-student-form-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 320px 320px;
+    grid-template-rows: 320px 500px;
     grid-template-areas:
         "box1 box3"
         "box2 box4"
@@ -592,6 +592,8 @@ textarea:focus {
     color: #333;
     gap: 1em;
     text-align: left;
+    border-radius: 1.5em;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, .15);
 }
 
 
