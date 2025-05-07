@@ -12,6 +12,7 @@ class CourseForm(forms.ModelForm):
             'units': forms.NumberInput()
         }
 
+
 class UploadFileForm(forms.Form):
     files = forms.FileField()
 

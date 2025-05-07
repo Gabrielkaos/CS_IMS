@@ -1,12 +1,12 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-<h1 style="color: #333; margin-bottom: 1em">Courses</h1>
+<h1 style="color: #333; margin-bottom: 1em">Subjects</h1>
 
 <div class="menu-2-container">
   <div class="menu-2">
     <button
       style="grid-area: button-1"
-      onclick="window.location.href='{% url 'course_create' %}'"
+      onclick="window.location.href='{% url 'subject_create' %}'"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@
         <div class="action-button-container">
           <button
             class="edit-button"
-            onclick="window.location.href='{% url 'course_update' course.pk %}'"
+            onclick="window.location.href='{% url 'subject_update' course.pk %}'"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@
           </button>
           <button
             class="delete-button"
-            onclick="window.location.href='{% url 'course_delete' course.pk %}'"
+            onclick="window.location.href='{% url 'subject_delete' course.pk %}'"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,7 @@
           </button>
           <button
             class="others-button"
-            onclick="window.location.href='{% url 'course_info' course.pk %}'"
+            onclick="window.location.href='{% url 'subject_info' course.pk %}'"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

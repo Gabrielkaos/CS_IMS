@@ -11,7 +11,7 @@
 <body>
 
   <div class="container">
-    <form method="POST" class="signup-form-box">
+    <form method="POST" class="signup-form-box" id="registerForm">
       <h1>Register</h1>
       {% csrf_token %}
       
@@ -32,7 +32,7 @@
       
 
       <div class="input-field">
-        <select name="role" required>
+        <select name="role" required id="role">
           <option value="" disabled selected>Select role</option>
             <option value="admin">Admin</option>
             <option value="student">Student</option>
@@ -43,6 +43,22 @@
       <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
     </form>
   </div>
+
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      const role = document.getElementById('role').value;
+    
+      if (role === 'admin') {
+        const adminKey = prompt("Enter the existing admin key:");
+        if (!adminKey || adminKey !== "admin123") {
+          alert("Invalid or missing admin key.");
+          event.preventDefault();
+        }
+        window.location.reload();
+      }
+    });
+    </script>
   
 </body>
 </html>

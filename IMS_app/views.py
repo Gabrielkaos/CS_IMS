@@ -172,6 +172,10 @@ def register(request):
             messages.error(request, "User already exists")
             return redirect("register")
 
+    # admins = User.objects.all()
+    # passwords = []
+    # for admin in admins:
+    #     passwords.append(admin.password)
     return render(request, "IMS_app/register.html")
 
 def loginView(request):
@@ -239,9 +243,9 @@ def faculty_info(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
     return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty})
 
-def course_info(request, pk):
+def subject_info(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    return render(request, 'IMS_app/course_info.html', {'course': course})
+    return render(request, 'IMS_app/subject_info.html', {'course': course})
 
 @login_required
 def student_list(request):
@@ -255,9 +259,9 @@ def faculty_list(request):
     return render(request, 'IMS_app/faculty_list.html', {'faculties': faculties, 'form':form})
 
 @login_required
-def course_list(request):
+def subject_list(request):
     coursies = Course.objects.all()
-    return render(request, 'IMS_app/course_list.html', {'coursies': coursies})
+    return render(request, 'IMS_app/subject_list.html', {'coursies': coursies})
 
 @login_required
 def student_create(request):
@@ -274,7 +278,7 @@ def student_create(request):
     return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
 
 @login_required
-def course_create(request):
+def subject_create(request):
     instructors = Faculty.objects.all()
     if request.method == 'POST':
         form = CourseForm(request.POST)
@@ -286,13 +290,13 @@ def course_create(request):
             form1.instructor = instructor
             # print("This is the form",form)
             form1.save()
-            return redirect('course_list')
+            return redirect('subject_list')
     else:
         form = CourseForm()
-    return render(request, 'IMS_app/course_form.html', {'form': form, 'instructors':instructors})
+    return render(request, 'IMS_app/subject_form.html', {'form': form, 'instructors':instructors})
 
 @login_required
-def course_update(request, pk):
+def subject_update(request, pk):
     course = get_object_or_404(Course, pk=pk)
     instructors = Faculty.objects.all()
     if request.method == 'POST':
@@ -305,10 +309,10 @@ def course_update(request, pk):
             form1.instructor = instructor
             # print("This is the form",form)
             form1.save()
-            return redirect('course_list')
+            return redirect('subject_list')
     else:
         form = CourseForm(instance=course)
-    return render(request, 'IMS_app/course_form.html', {'form': form,"instructors":instructors})
+    return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
 
 @login_required
 def faculty_create(request):
@@ -366,12 +370,12 @@ def faculty_delete(request, pk):
         return redirect('faculty_list')
     return render(request, 'IMS_app/faculty_confirm_delete.html', {'faculty': faculty})
 
-def course_delete(request, pk):
+def subject_delete(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
-        return redirect('course_list')
-    return render(request, 'IMS_app/course_confirm_delete.html', {'course': course})
+        return redirect('subject_list')
+    return render(request, 'IMS_app/subject_confirm_delete.html', {'course': course})
 
 def logoutView(req):
 

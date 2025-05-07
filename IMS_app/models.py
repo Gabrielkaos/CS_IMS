@@ -67,7 +67,6 @@ class Faculty(models.Model):
         return f"{self.name} ({self.student_id})"
 
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile", null=True, blank=True)
 
     GENDER_CHOICES = [
         ('M', 'Male'),
@@ -136,3 +135,5 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.course_code} - {self.title}"
+    
+

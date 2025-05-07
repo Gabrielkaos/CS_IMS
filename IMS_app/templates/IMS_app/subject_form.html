@@ -6,10 +6,10 @@
             
         <div class="modal-content-container" style="grid-area: info1">
             <div class="header">
-                <button class="back-button" onclick="window.location.href='{% url 'course_list' %}'">
+                <button class="back-button" onclick="window.location.href='{% url 'subject_list' %}'">
                     <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
                 </button>
-                <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Course</h2>
+                <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Subject</h2>
             </div>
 
             {{ form.course_code.label }} {{ form.course_code }}
@@ -36,7 +36,7 @@
 
         
         <div class="modal-info-container" style="grid-area: info3">
-            <button class="cancel-button" type="button" onclick="window.location.href='{% url 'course_list' %}'">Cancel</button>
+            <button class="cancel-button" type="button" onclick="window.location.href='{% url 'subject_list' %}'">Cancel</button>
         </div>
 
         <div class="modal-info-container" style="grid-area: info4">

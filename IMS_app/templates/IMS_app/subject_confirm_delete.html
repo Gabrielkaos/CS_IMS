@@ -5,7 +5,7 @@
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="confirm_button">Yes, delete</button>
-            <button onclick="window.location.href='{% url 'course_list' %}'" class="cancel_button">Cancel</button>
+            <button onclick="window.location.href='{% url 'subject_list' %}'" class="cancel_button">Cancel</button>
         </form>
     </div>
 {% endblock %}
