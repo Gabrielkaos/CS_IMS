@@ -2,13 +2,13 @@
 
 :root {
     --primary-color: #fbf7ea;
-    --secondary-color: #7b2cbf;
-    --hover-color: #e0aaff;
-    --accent-color: #f72585;
+    --secondary-color: #094221;
+    --hover-color: #2e754b;
+    --accent-color: #277548;
     --line-color: #42434a;
     --text-color: #fcfaff;
-    --third-color: #9d4edd;
-    --fourth-color: #c77dff;
+    --third-color: #3ca36c;
+    --fourth-color: #43c07d;
 }
 
 * {
@@ -242,31 +242,47 @@ main p {
     display: none;
 }
 
+
+/* <===== DASHBOARD STATS =====> */
+
+.student-card-container {
+    height: 100px;
+    width: 10rem;
+    background-color: var(--third-color);
+    margin-inline: auto;
+    padding: 0 1.5em;
+    border-radius: 1rem;
+    border: 1px solid var(--text-color);
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, .15);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.age-card-container {
+    height: 100px;
+    width: 10rem;
+    background-color: var(--fourth-color);
+    margin-inline: auto;
+    padding: 0 1.5em;
+    border-radius: 1rem;
+    border: 1px solid var(--text-color);
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, .15);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;}
+
 .gender-stats-container {
     background-color: var(--secondary-color);
     border: none;
     height: 100%;
     width: 100%;
-}
-
-.gender-stats-container  ul {
-    display: flex;         
-    flex-direction: row;
-    gap: 16px;    
-    list-style: none;
-    bottom: 0;
-}
-
-.gender-stats-container li {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0; 
-    padding: 12px;        
-    border: 1px solid var(--primary-color);
-    border-radius: 1em;
-    text-align: center;   
-    justify-content: center;
 }
 
 .gender-stats-container span {
@@ -278,26 +294,7 @@ main p {
     border: none;
     height: 100%;
     width: 100%;
-}
-
-.student-stats-container  ul {
-    display: flex;         
-    flex-direction: row;
-    gap: 16px;    
-    list-style: none;
     bottom: 0;
-}
-
-.student-stats-container  li {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0; 
-    padding: 12px;        
-    border: 1px solid var(--primary-color);
-    border-radius: 1em;
-    text-align: center;   
-    justify-content: center;
 }
 
 .student-stats-container span {
@@ -311,6 +308,12 @@ main p {
     width: 100%;
 }
 
+.age-stats-card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+/* 
 .age-stats-container ul {
     display: flex;         
     flex-direction: row;
@@ -340,8 +343,9 @@ main p {
 
 .age-stats-container span {
     width: 100%;
-}
+} */
 
+/* <===== ACTION BUTTONS =====> */
 .purple-button {
     width: 150px;
     height: 40px;
@@ -373,7 +377,7 @@ main p {
     border: none;
     border-radius: .5em;
     cursor: pointer;
-    background-color: var(--accent-color);
+    background-color: var(--fourth-color);
 }
 
 .edit-button:hover {

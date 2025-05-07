@@ -11,35 +11,31 @@
 
   <div class="student-stats-container container" style="grid-area: box-2">
     <canvas id="yearLevelChart" height="15" width="50"></canvas>
-    <ul>
+    <div class="age-stats-card-container">
       {% for level in year_level_data %}
-      <li>Year {{ level.year_level }}: {{ level.count }}</li>
+        <div class="student-card-container">
+          <span>Year {{ level.year_level }}: {{ level.count }}</span>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   </div>
 
   <div class="age-stats-container container" style="grid-area: box-3">
-    <canvas id="ageStatsChart" height="80" width"50"></canvas>
-    <ul>
-      <li>
-        <a href="">
-          <span>Average Age</span> 
-          {{ average_age }}
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <span>Youngest Student Age</span>
-          {{ min_age }}
-        </a>
-      </li>
-      <li>
-        <a href="">
+    <canvas id="ageStatsChart" height="80" width"100"></canvas>
+    <div class="age-stats-card-container">
+      <div class="age-card-container">
+        <span>Average Age</span> 
+        {{ average_age }}
+      </div>
+      <div class="age-card-container">
+        <span>Youngest Student Age</span>
+        {{ min_age }}
+      </div>
+      <div class="age-card-container">
           <span>Oldest Student Age</span>
           {{ max_age }}
-        </a>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -52,7 +48,7 @@
       datasets: [{
         label: 'Gender Ratio',
         data: [{% for gender, count in gender_data.items %}{{ count }},{% endfor %}],
-        backgroundColor: ['#2964d6', '#ff0081', '#FFCE56', '#A56E91'],
+        backgroundColor: ['#3ca36c', '#43c07d', '#2e754b', '#277548'],
       }]
     },
     options: {
@@ -75,7 +71,7 @@
       datasets: [{
         label: 'Students per Year Level',
         data: [{% for level in year_level_data %}{{ level.count }},{% endfor %}],
-        backgroundColor: ['#4ED7F1', '#6FE6FC', '#A8F1FF', '#FFFA8D'],
+        backgroundColor: ['#2e754b'],
       }]
     },
     options: {
@@ -100,7 +96,7 @@
           label: 'Student Age Statistics',
           data: [{{ average_age }}, {{ min_age }}, {{ max_age }}],
           borderWidth: 1,
-          backgroundColor: ['#626F47', '#A4B465', '#F5ECD5', '#FFFA8D'],
+          backgroundColor: ['#094221', '#2e754b', '#277548', '#3ca36c '],
         }]
       },
       options: {
@@ -108,6 +104,13 @@
           y: {
             beginAtZero: true
           }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#fff'
+            }
+          },
         }
       }
   });
