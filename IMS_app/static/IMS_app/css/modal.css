@@ -15,7 +15,7 @@
 
 /* Modal Box */
 .modal-content {
-    gap: 1em;
+    gap: 1.5em;
     display: grid;
     width: 50%;
     height: 98%;
@@ -29,7 +29,7 @@
     background-color: #fff;
     color: #333;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    padding: 1em 2em;
+    padding: .5em 2em;
 }
 
 .subject-modal-content {
@@ -99,7 +99,6 @@
     gap: 1em;
 }
 
-
 .file-upload-content input{
     width: 100%;
     font-size: 16px;
@@ -156,8 +155,8 @@
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    height: 20px;
-    padding-bottom: 15px;
+    height: 10px;
+    padding-bottom: 5px;
 }
 
 .header h2 {
@@ -247,9 +246,10 @@
 .subject-modal-content textarea, 
 .subject-modal-content input,
 .modal-content input  { 
+    font-size: 1em;
     width: 100%;
-    height: 35px;
-    padding: 12px;
+    height: 30px;
+    padding: 5px 10px;
     background: #eee;
     border-radius: 6px;
     border: none;
@@ -260,7 +260,7 @@
 .subject-modal-content select,
 .modal-content select {
     width: 100%;
-    height: 35px;
+    height: 30px;
     padding: 5px;
     background: #eee;
     border-radius: 6px;
