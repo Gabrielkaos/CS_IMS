@@ -160,10 +160,10 @@ def register(request):
         password = request.POST["password"]
         try:
             password2 = request.POST["password2"]
-            role = request.POST["role"]
+            # role = request.POST["role"]
         except:
             password2 = password
-            role = "student"
+            # role = "student"
         
 
         if password != password2:
@@ -175,12 +175,8 @@ def register(request):
         if created:
             user.set_password(password)
             
-            if role=="admin":
-                user.is_superuser = True
-                user.is_staff = True
-            else:
-                user.is_superuser = False
-                user.is_staff = False
+            user.is_superuser = True
+            user.is_staff = True
             user.save()
             messages.success(request, "User created")
             return render(request, "IMS_app/login.html")
