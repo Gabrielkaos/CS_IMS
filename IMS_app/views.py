@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student, Faculty, Subject, Course
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm, CourseForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -183,7 +183,6 @@ def loginView(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        # role = request.POST['role']
         
         user = authenticate(request, username=username, password=password)
         if user is not None:
@@ -319,6 +318,20 @@ def subject_update(request, pk):
     return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
 
 @login_required
+def course_create(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form1 = form.save(commit=False)
+
+            form1.name = str(form1.name).upper()
+            form1.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm()
+    return render(request, 'IMS_app/course_form.html', {'form': form})
+
+
 def faculty_create(request):
     provinces = get_provinces()
     if request.method == 'POST':
@@ -370,6 +383,15 @@ def student_delete(request, pk):
         student.delete()
         return redirect('student_list')
     return render(request, 'IMS_app/student_confirm_delete.html', {'student': student})
+
+@login_required
+def course_delete(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('course_list')
+    return render(request, 'IMS_app/course_confirm_delete.html', {'course': course})
+
 
 def faculty_delete(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
