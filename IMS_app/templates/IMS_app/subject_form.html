@@ -11,14 +11,18 @@
                 </button>
                 <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Subject</h2>
             </div>
-
-            {{ form.course_code.label }} {{ form.course_code }}
+            <label>Course code</label>
+            {{ form.course_code }}
+            
+            <label>Title</label>
+            {{ form.title }}
                 
-            {{ form.title.label }} {{ form.title }}
+            <label>Discription</label>
+            {{ form.description }}
                 
-            {{ form.description.label }} {{ form.description }}
-                
-            {{ form.units.label }} {{ form.units }}
+            <label>Units</label>
+            {{ form.units }}
+            
             
             <label for="faculties">Select Instructor</label>
             <select required name="faculties" id="faculties">
