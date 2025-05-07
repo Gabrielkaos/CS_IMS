@@ -558,7 +558,7 @@ textarea {
     border-bottom-right-radius: .5em;
     border: none;
     border-left: 3px solid var(--accent-color);
-    pointer-events: none;
+    /* pointer-events: none; */
     color: var(--line-color);
 
 }
