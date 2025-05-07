@@ -189,10 +189,6 @@ def register(request):
             messages.error(request, "User already exists")
             return redirect("register")
 
-    # admins = User.objects.all()
-    # passwords = []
-    # for admin in admins:
-    #     passwords.append(admin.password)
     return render(request, "IMS_app/register.html")
 
 def loginView(request):

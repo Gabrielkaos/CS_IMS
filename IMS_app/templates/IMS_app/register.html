@@ -11,7 +11,7 @@
 <body>
 
   <div class="container">
-    <form method="POST" class="signup-form-box" id="registerForm">
+    <form method="POST" class="signup-form-box" id="registerForm"  action="{% url 'register' %}">
       <h1>Register</h1>
       {% csrf_token %}
       
