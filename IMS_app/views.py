@@ -155,11 +155,16 @@ def register(request):
     # print("Hello")
     if request.method == "POST":
         # print("HGello")
+        print("I am in registerView")
         username = request.POST["username"]
         password = request.POST["password"]
-        password2 = request.POST["password2"]
-
-        role = request.POST["role"]
+        try:
+            password2 = request.POST["password2"]
+            role = request.POST["role"]
+        except:
+            password2 = password
+            role = "student"
+        
 
         if password != password2:
             messages.error(request, "Wrong password confirmation")
@@ -194,6 +199,7 @@ def loginView(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        print("I am in loginView")
         
         user = authenticate(request, username=username, password=password)
         if user is not None:
