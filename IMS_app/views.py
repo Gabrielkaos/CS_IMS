@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student, Faculty, Course
+from .models import Student, Faculty, Subject, Course
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm, CourseForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -108,7 +108,7 @@ def upload_excel(request):
 
             for row in sheet.iter_rows(min_row=2, values_only=True):
                 first_name, middle_name, last_name, student_id, year_level, status, email, date_of_birth,gender,phone_number, current_province, current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
-                emergency_contact_phone, emergency_contact_relation = row
+                emergency_contact_phone, emergency_contact_relation, course = row
                 Student.objects.create(
                     first_name=first_name,
                     middle_name=middle_name,
@@ -118,6 +118,7 @@ def upload_excel(request):
                     status=status,
                     email=email,
                     date_of_birth=date_of_birth,
+                    course=Course.objects.get(name=course.upper()),
                     gender=gender[0].upper(),
                     phone_number=phone_number,
                     current_province_code=get_province_code(current_province.title()),
@@ -244,14 +245,15 @@ def faculty_info(request, pk):
     return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty})
 
 def subject_info(request, pk):
-    course = get_object_or_404(Course, pk=pk)
+    course = get_object_or_404(Subject, pk=pk)
     return render(request, 'IMS_app/subject_info.html', {'course': course})
 
 @login_required
 def student_list(request):
     students = Student.objects.all()
     form = UploadFileForm()
-    return render(request, 'IMS_app/student_list.html', {'students': students, 'form':form})
+    coursies = Course.objects.all()
+    return render(request, 'IMS_app/student_list.html', {'students': students, 'form':form,'coursies':coursies})
 @login_required
 def faculty_list(request):
     faculties = Faculty.objects.all()
@@ -260,28 +262,30 @@ def faculty_list(request):
 
 @login_required
 def subject_list(request):
-    coursies = Course.objects.all()
+    coursies = Subject.objects.all()
     return render(request, 'IMS_app/subject_list.html', {'coursies': coursies})
 
 @login_required
 def student_create(request):
     provinces = get_provinces()
+    coursies = Course.objects.all()
     if request.method == 'POST':
         form = StudentForm(request.POST, provinces=provinces)
         if form.is_valid():
-            print('create form cleaned:',form.cleaned_data)
-            form.save()
-            print("This is the form",form)
+            form1 = form.save(commit=False)
+            course = Faculty.objects.get(id=request.POST["course"])
+            form1.course = course
+            form1.save()
             return redirect('student_list')
     else:
         form = StudentForm(provinces=provinces)
-    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
+    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces,'coursies': coursies})
 
 @login_required
 def subject_create(request):
     instructors = Faculty.objects.all()
     if request.method == 'POST':
-        form = CourseForm(request.POST)
+        form = SubjectForm(request.POST)
         if form.is_valid():
             # print('create form cleaned:',form.cleaned_data)
             form1 = form.save(commit=False)
@@ -292,15 +296,15 @@ def subject_create(request):
             form1.save()
             return redirect('subject_list')
     else:
-        form = CourseForm()
+        form = SubjectForm()
     return render(request, 'IMS_app/subject_form.html', {'form': form, 'instructors':instructors})
 
 @login_required
 def subject_update(request, pk):
-    course = get_object_or_404(Course, pk=pk)
+    course = get_object_or_404(Subject, pk=pk)
     instructors = Faculty.objects.all()
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
+        form = SubjectForm(request.POST, instance=course)
         if form.is_valid():
             # print('update form cleaned:',form.cleaned_data)
             form1 = form.save(commit=False)
@@ -311,7 +315,7 @@ def subject_update(request, pk):
             form1.save()
             return redirect('subject_list')
     else:
-        form = CourseForm(instance=course)
+        form = SubjectForm(instance=course)
     return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
 
 @login_required
@@ -331,16 +335,20 @@ def faculty_create(request):
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
     provinces = get_provinces()
+    coursies = Course.objects.all()
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student, provinces=provinces)
         if form.is_valid():
-            print('update form cleaned:',form.cleaned_data)
-            form.save()
-            print("This is the form",form)
+            form1 = form.save()
+            
+            course = Course.objects.get(id=request.POST["course"])
+            form1.course = course
+
+            form1.save()
             return redirect('student_list')
     else:
         form = StudentForm(instance=student, provinces=provinces)
-    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces})
+    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces,'coursies':coursies})
 
 @login_required
 def faculty_update(request, pk):
@@ -371,11 +379,16 @@ def faculty_delete(request, pk):
     return render(request, 'IMS_app/faculty_confirm_delete.html', {'faculty': faculty})
 
 def subject_delete(request, pk):
-    course = get_object_or_404(Course, pk=pk)
+    course = get_object_or_404(Subject, pk=pk)
     if request.method == 'POST':
         course.delete()
         return redirect('subject_list')
     return render(request, 'IMS_app/subject_confirm_delete.html', {'course': course})
+
+
+def course_list(request):
+    coursies = Course.objects.all()
+    return render(request, 'IMS_app/course_list.html', {'coursies': coursies})
 
 def logoutView(req):
 

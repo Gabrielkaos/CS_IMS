@@ -1,9 +1,9 @@
 from django import forms
-from .models import Student, Faculty, Course
+from .models import Student, Faculty, Subject
 
-class CourseForm(forms.ModelForm):
+class SubjectForm(forms.ModelForm):
     class Meta:
-        model = Course
+        model = Subject
         fields = ['course_code', 'title', 'description', 'units']
         widgets = {
             'course_code': forms.TextInput(),

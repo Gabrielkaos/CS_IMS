@@ -1,0 +1,30 @@
+{% extends "IMS_app/base.html" %} {% load static %} {% block content %}
+
+<h1 style="color: #333; margin-bottom: 1em">Courses</h1>
+
+
+<table id="students" class="table">
+  <thead>
+    <tr>
+      <th data-title="Name">Name</th>
+      <th data-title="Description">Description</th>
+      <th data-title="Students Enrolled">Students Enrolled</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in coursies %}
+    <tr>
+      <td data-title="Name">{{ course.name }}</td>
+      <td data-title="Description">{{ course.description }}</td>
+      <td data-title="Students Enrolled">{{ course.students.count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  $(document).ready(function () {
+    $("#students").DataTable();
+  });
+</script>
+{% endblock %}

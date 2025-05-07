@@ -1,6 +1,6 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-<h1 style="color: #333; margin-bottom: 1em">Student List</h1>
+<h1 style="color: #333; margin-bottom: 1em">Student</h1>
 
 <div id="attendanceModal" class="modal-wrapper" style="display: none">
   <div class="file-upload-content">
@@ -68,10 +68,10 @@
   <thead>
     <tr>
       <th data-title="Student ID">Student ID</th>
+      <th data-title="Course">Course</th>
       <th data-title="Name">Name</th>
       <th data-title="Gender">Gender</th>
       <th data-title="Status">Status</th>
-      <th data-title="DOB">DOB</th>
       <th data-title="Year Level">Year Level</th>
       <th data-title="Email">Email</th>
       <th data-title="Actions">Actions</th>
@@ -81,10 +81,10 @@
     {% for student in students %}
     <tr>
       <td data-title="Student ID">{{ student.student_id }}</td>
+      <td data-title="Course">{{ student.course.name }}</td>
       <td data-title="Name">{{ student.name }}</td>
       <td data-title="Gender">{{ student.gender }}</td>
       <td data-title="Status">{{ student.status }}</td>
-      <td data-title="DOB">{{ student.date_of_birth }}</td>
       <td data-title="Year Level">{{ student.year_level }}</td>
       <td data-title="Email">{{ student.email }}</td>
       <td data-title="Actions">

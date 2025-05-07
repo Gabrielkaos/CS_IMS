@@ -23,6 +23,13 @@
                 
             <label for="id_student_id">Student ID</label>
             {{ form.student_id }}
+
+            <label for="course">Select Course</label>
+            <select required name="course" id="course">
+                {% for course in coursies%}
+                <option value="{{course.id}}">{{course.name}}</option>
+                {%endfor%}
+            </select>
                 
             <label for="id_year_level">Year Level</label>
             {{ form.year_level }}

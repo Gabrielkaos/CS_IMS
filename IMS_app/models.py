@@ -1,9 +1,12 @@
-import os
-import json
 from django.db import models
-from django.contrib.auth.models import User
 
 
+class Course(models.Model):
+    name = models.CharField(max_length=100)              
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 
     
@@ -88,6 +91,15 @@ class Student(models.Model):
         ('Other', 'Other')
     ]
 
+    COURSE_CHOICES = [
+        ('BSCS', 'BSCS'),
+        ('BSIT', 'BSIT'),
+        ('BSEMC', 'BSEMC')
+    ]
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='students')
+
+
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100)
@@ -125,7 +137,7 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.name} ({self.student_id})"
 
-class Course(models.Model):
+class Subject(models.Model):
     course_code = models.CharField(max_length=10, unique=True)  
     title = models.CharField(max_length=100)      
     description = models.TextField(blank=True)
