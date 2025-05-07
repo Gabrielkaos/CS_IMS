@@ -328,20 +328,6 @@ def subject_update(request, pk):
         form = SubjectForm(instance=course)
     return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
 
-@login_required
-def course_create(request):
-    if request.method == 'POST':
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            form1 = form.save(commit=False)
-
-            form1.name = str(form1.name).upper()
-            form1.save()
-            return redirect('course_list')
-    else:
-        form = CourseForm()
-    return render(request, 'IMS_app/course_form.html', {'form': form})
-
 
 def faculty_create(request):
     provinces = get_provinces()
@@ -394,14 +380,6 @@ def student_delete(request, pk):
         student.delete()
         return redirect('student_list')
     return render(request, 'IMS_app/student_confirm_delete.html', {'student': student})
-
-@login_required
-def course_delete(request, pk):
-    course = get_object_or_404(Course, pk=pk)
-    if request.method == 'POST':
-        course.delete()
-        return redirect('course_list')
-    return render(request, 'IMS_app/course_confirm_delete.html', {'course': course})
 
 
 def faculty_delete(request, pk):

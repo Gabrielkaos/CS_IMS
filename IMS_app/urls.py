@@ -19,7 +19,7 @@ from .views import register, dashboard,  upload_excel, \
     student_list, student_create, student_update, student_delete, student_info, logoutView, \
     loginView, faculty_list, faculty_update, faculty_create, faculty_delete, faculty_info,\
     upload_faculty,subject_list, subject_create, subject_update, subject_delete, subject_info, \
-    course_list, course_create, course_delete
+    course_list
 
 urlpatterns = [
 
@@ -31,8 +31,6 @@ urlpatterns = [
 
     #courses
     path("course_list/",course_list,name="course_list"),
-    path("course_create/",course_create,name="course_create"),
-    path("course_delete/<int:pk>/",course_delete,name="course_delete"),
 
     #subjects
     path("subject_list/",subject_list,name="subject_list"),
