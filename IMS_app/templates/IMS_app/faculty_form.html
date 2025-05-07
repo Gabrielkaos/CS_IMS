@@ -1,6 +1,6 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-<div>
+<div class="modal-wrapper">
     <form method="post" class="modal-content container">
         {% csrf_token %}
             
@@ -33,6 +33,7 @@
 
         <!-- Current Address -->
         <div class="modal-info-container" style="grid-area: info2">
+            <div class="header"></div
             <h3>Current Address</h3>
             <label for="id_current_province_code">Province</label>
             <select id="id_current_province_code" name="current_province_code" >

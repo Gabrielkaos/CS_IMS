@@ -1,175 +1,186 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-    <div>
-        <form method="post" class="modal-content container">
-            {% csrf_token %}
-                
-            <div class="modal-content-container" style="grid-area: info1">
-                <div class="header">
-                    <button class="back-button" onclick="window.location.href='{% url 'student_list' %}'">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-                    </button>
-                    <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Student</h2>
-                </div>
-                <h3>Personal Info</h3>
-
-                {{ form.first_name.label }} {{ form.first_name }}
-                    
-                {{ form.middle_name.label }} {{ form.middle_name }}
-                    
-                {{ form.last_name.label }} {{ form.last_name }}
-                    
-                {{ form.student_id.label }} {{ form.student_id }}
-                    
-                {{ form.year_level.label }} {{ form.year_level }}
-
-                {{ form.status.label }} {{ form.status }}
-
-                {{ form.email.label }} {{ form.email }}
-
-                {{ form.date_of_birth.label }} {{ form.date_of_birth }}
-                
-                {{ form.gender.label }} {{ form.gender }}
-
-                {{ form.phone_number.label }} {{ form.phone_number }}
-            </div>
-
-            <!-- Current Address -->
-            <div class="modal-info-container" style="grid-area: info2">
-                <h3>Current Address</h3>
-                <label for="id_current_province_code">Province</label>
-                <select id="id_current_province_code" name="current_province_code" >
-                    <option value="">Select Province</option>
-                    {% for province in provinces %}
-                        <option value="{{ province.code }}">{{ province.name }}</option>
-                    {% endfor %}
-                </select>
-                <label for="id_current_city_code" >City/Municipality</label>
-                <select id="id_current_city_code" name="current_city_code" >
-                    <option value="">Select City/Municipality</option>
-                </select>
-                <label for="id_current_barangay_code" >Barangay</label>
-                <select id="id_current_barangay_code" name="current_barangay_code" >
-                    <option value="">Select Barangay</option>
-                </select>
-
-                <!-- Permanent Address -->
-                <h3>Permanent Address</h3>
-                <label for="id_permanent_province_code">Province</label>
-                <select id="id_permanent_province_code" name="permanent_province_code" >
-                    <option value="">Select Province</option>
-                    {% for province in provinces %}
-                        <option value="{{ province.code }}">{{ province.name }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="id_permanent_city_code" >City/Municipality</label>
-                <select id="id_permanent_city_code" name="permanent_city_code" >
-                    <option value="">Select City/Municipality</option>
-                </select>
-
-                <label for="id_permanent_barangay_code" >Barangay</label>
-                <select id="id_permanent_barangay_code" name="permanent_barangay_code" >
-                    <option value="">Select Barangay</option>
-                </select>
-
-                <h3>Emergency Contact Info</h3>
-                {{ form.emergency_contact_name.label }} {{ form.emergency_contact_name }}
-                {{ form.emergency_contact_phone.label }} {{ form.emergency_contact_phone }}
-                {{ form.emergency_contact_relation.label }} {{ form.emergency_contact_relation }}
-            </div>
+<div class="modal-wrapper">
+    <form method="post" class="modal-content container">
+        {% csrf_token %}
             
-            <div class="modal-info-container" style="grid-area: info3">
-                <button class="cancel-button" type="button" onclick="window.location.href='{% url 'student_list' %}'">Cancel</button>
+        <div class="modal-content-container" style="grid-area: info1">
+            <div class="header">
+                <button class="back-button" onclick="window.location.href='{% url 'student_list' %}'">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+                </button>
+                <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Student</h2>
             </div>
+            <h3>Personal Info</h3>
+            <label for="id_first_name">First name</label>
+             {{ form.first_name }}
+                
+            <label for="id_midlle_name">Middle name</label>
+            {{ form.middle_name }}
+                
+            <label for="id_last_name">Last name</label>
+            {{ form.last_name }}
+                
+            <label for="id_student_id">Student ID</label>
+            {{ form.student_id }}
+                
+            <label for="id_year_level">Year Level</label>
+            {{ form.year_level }}
 
-            <div class="modal-info-container" style="grid-area: info4">
-                <button class="save-button" type="submit">Save</button>
+            <label for="id_status">Status</label>
+             {{ form.status }}
+
+             <label for="id_email">Email</label>
+             {{ form.email }}
+
+             <label for="id_date_of_birth">Birthday</label>
+             {{ form.date_of_birth }}
+            
+             <label for="id_gender">Gender</label>
+             {{ form.gender }}
+
+             <label for="id_phone_number">Phone Number</label>
+              {{ form.phone_number }}
+        </div>
+
+        <!-- Current Address -->
+        <div class="modal-info-container" style="grid-area: info2">
+            <div class="header">
             </div>
-        </form>
-    </div>
-    
-    <!-- JavaScript for Dynamic Address Population -->
-    <script>
-        // Load cities/municipalities based on the selected province
-        document.getElementById("id_current_province_code").addEventListener("change", function () {
-            const provinceCode = this.value;
-            if (provinceCode) {
-                fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
-                    .then(response => response.json())
-                    .then(data => {
-                        const citySelect = document.getElementById("id_current_city_code");
-                        citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-                        document.getElementById("id_current_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
-                        const filteredCities = data.filter(city => city.provinceCode === provinceCode);
-                        filteredCities.forEach(city => {
-                            const option = document.createElement("option");
-                            option.value = city.code;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                    });
-            }
-        });
+            <h3>Current Address</h3>
+            <label for="id_current_province_code">Province</label>
+            <select id="id_current_province_code" name="current_province_code" >
+                <option value="">Select Province</option>
+                {% for province in provinces %}
+                    <option value="{{ province.code }}">{{ province.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="id_current_city_code" >City/Municipality</label>
+            <select id="id_current_city_code" name="current_city_code" >
+                <option value="">Select City/Municipality</option>
+            </select>
+            <label for="id_current_barangay_code" >Barangay</label>
+            <select id="id_current_barangay_code" name="current_barangay_code" >
+                <option value="">Select Barangay</option>
+            </select>
 
-        // Load barangays based on the selected city/municipality
-        document.getElementById("id_current_city_code").addEventListener("change", function () {
-            const cityCode = this.value;
-            if (cityCode) {
-                fetch("{% static 'IMS_app/api/barangays.json' %}")
-                    .then(response => response.json())
-                    .then(data => {
-                        const barangaySelect = document.getElementById("id_current_barangay_code");
-                        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-                        const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
-                        filteredBarangays.forEach(barangay => {
-                            const option = document.createElement("option");
-                            option.value = barangay.code;
-                            option.textContent = barangay.name;
-                            barangaySelect.appendChild(option);
-                        });
-                    });
-            }
-        });
+            <!-- Permanent Address -->
+            <h3>Permanent Address</h3>
+            <label for="id_permanent_province_code">Province</label>
+            <select id="id_permanent_province_code" name="permanent_province_code" >
+                <option value="">Select Province</option>
+                {% for province in provinces %}
+                    <option value="{{ province.code }}">{{ province.name }}</option>
+                {% endfor %}
+            </select>
 
-        // Repeat the same logic for permanent address fields
-        document.getElementById("id_permanent_province_code").addEventListener("change", function () {
-            const provinceCode = this.value;
-            if (provinceCode) {
-                fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
-                    .then(response => response.json())
-                    .then(data => {
-                        const citySelect = document.getElementById("id_permanent_city_code");
-                        citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-                        document.getElementById("id_permanent_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
-                        const filteredCities = data.filter(city => city.provinceCode === provinceCode);
-                        filteredCities.forEach(city => {
-                            const option = document.createElement("option");
-                            option.value = city.code;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                    });
-            }
-        });
+            <label for="id_permanent_city_code" >City/Municipality</label>
+            <select id="id_permanent_city_code" name="permanent_city_code" >
+                <option value="">Select City/Municipality</option>
+            </select>
 
-        document.getElementById("id_permanent_city_code").addEventListener("change", function () {
-            const cityCode = this.value;
-            if (cityCode) {
-                fetch("{% static 'IMS_app/api/barangays.json' %}")
-                    .then(response => response.json())
-                    .then(data => {
-                        const barangaySelect = document.getElementById("id_permanent_barangay_code");
-                        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-                        const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
-                        filteredBarangays.forEach(barangay => {
-                            const option = document.createElement("option");
-                            option.value = barangay.code;
-                            option.textContent = barangay.name;
-                            barangaySelect.appendChild(option);
-                        });
+            <label for="id_permanent_barangay_code" >Barangay</label>
+            <select id="id_permanent_barangay_code" name="permanent_barangay_code" >
+                <option value="">Select Barangay</option>
+            </select>
+
+            <h3>Emergency Contact Info</h3>
+            {{ form.emergency_contact_name.label }} {{ form.emergency_contact_name }}
+            {{ form.emergency_contact_phone.label }} {{ form.emergency_contact_phone }}
+            {{ form.emergency_contact_relation.label }} {{ form.emergency_contact_relation }}
+        </div>
+        
+        <div class="modal-info-container" style="grid-area: info3">
+            <button class="cancel-button" type="button" onclick="window.location.href='{% url 'student_list' %}'">Cancel</button>
+        </div>
+
+        <div class="modal-info-container" style="grid-area: info4">
+            <button class="save-button" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript for Dynamic Address Population -->
+<script>
+    // Load cities/municipalities based on the selected province
+    document.getElementById("id_current_province_code").addEventListener("change", function () {
+        const provinceCode = this.value;
+        if (provinceCode) {
+            fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
+                .then(response => response.json())
+                .then(data => {
+                    const citySelect = document.getElementById("id_current_city_code");
+                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                    document.getElementById("id_current_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
+                    const filteredCities = data.filter(city => city.provinceCode === provinceCode);
+                    filteredCities.forEach(city => {
+                        const option = document.createElement("option");
+                        option.value = city.code;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
                     });
-            }
-        });
-    </script>
+                });
+        }
+    });
+
+    // Load barangays based on the selected city/municipality
+    document.getElementById("id_current_city_code").addEventListener("change", function () {
+        const cityCode = this.value;
+        if (cityCode) {
+            fetch("{% static 'IMS_app/api/barangays.json' %}")
+                .then(response => response.json())
+                .then(data => {
+                    const barangaySelect = document.getElementById("id_current_barangay_code");
+                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                    const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
+                    filteredBarangays.forEach(barangay => {
+                        const option = document.createElement("option");
+                        option.value = barangay.code;
+                        option.textContent = barangay.name;
+                        barangaySelect.appendChild(option);
+                    });
+                });
+        }
+    });
+
+    // Repeat the same logic for permanent address fields
+    document.getElementById("id_permanent_province_code").addEventListener("change", function () {
+        const provinceCode = this.value;
+        if (provinceCode) {
+            fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
+                .then(response => response.json())
+                .then(data => {
+                    const citySelect = document.getElementById("id_permanent_city_code");
+                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                    document.getElementById("id_permanent_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
+                    const filteredCities = data.filter(city => city.provinceCode === provinceCode);
+                    filteredCities.forEach(city => {
+                        const option = document.createElement("option");
+                        option.value = city.code;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                });
+        }
+    });
+
+    document.getElementById("id_permanent_city_code").addEventListener("change", function () {
+        const cityCode = this.value;
+        if (cityCode) {
+            fetch("{% static 'IMS_app/api/barangays.json' %}")
+                .then(response => response.json())
+                .then(data => {
+                    const barangaySelect = document.getElementById("id_permanent_barangay_code");
+                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                    const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
+                    filteredBarangays.forEach(barangay => {
+                        const option = document.createElement("option");
+                        option.value = barangay.code;
+                        option.textContent = barangay.name;
+                        barangaySelect.appendChild(option);
+                    });
+                });
+        }
+    });
+</script>
 {% endblock %}
