@@ -140,6 +140,7 @@ body {
 main {
     padding: min(30px, 7%);
     background-color: var(--primary-color);
+    overflow: hidden;
 }
 
 main p {
@@ -150,8 +151,8 @@ main p {
 
 .wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 385px 385px;
+    grid-template-columns: 500px 500px;
+    grid-template-rows: 300px 300px;
     grid-template-areas:
         "box-1 box-2"
         "box-1 box-3"
