@@ -277,15 +277,19 @@ def subject_list(request):
 def student_create(request):
     provinces = get_provinces()
     coursies = Course.objects.all()
+    print("Hello")
     if request.method == 'POST':
+        print("POST")
         form = StudentForm(request.POST, provinces=provinces)
         if form.is_valid():
+            print("Valid")
             form1 = form.save(commit=False)
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
             form1.save()
             return redirect('student_list')
     else:
+        print("Not POST")
         form = StudentForm(provinces=provinces)
     return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces,'coursies': coursies})
 
@@ -390,6 +394,7 @@ def subject_delete(request, pk):
 
 
 def course_list(request):
+    
     coursies = Course.objects.all()
     return render(request, 'IMS_app/course_list.html', {'coursies': coursies})
 
