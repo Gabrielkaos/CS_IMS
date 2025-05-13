@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
@@ -17,8 +17,30 @@
 .modal-content {
     gap: 1.5em;
     display: grid;
-    width: 50%;
     height: 98%;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 5px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "info1 info2"
+        "info1 info2"
+        "info3 info4"
+    ;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: .5em 2em;
+}
+
+.faculty-modal-content {
+    gap: 1.5em;
+    display: grid;
+    height: 98%;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 5px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas: 
@@ -35,7 +57,9 @@
 .subject-modal-content {
     gap: 1em;
     display: grid;
-    width: 50%;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 5px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 220px 220px;
     grid-template-areas: 
@@ -151,12 +175,12 @@
 }
 
 .header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
     width: 100%;
     height: 10px;
     padding-bottom: 5px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: left;
 }
 
 .header h2 {
@@ -164,11 +188,12 @@
     font-weight: 600;
     color: var(--third-color);
     margin-bottom: 1em;
+    text-align: left;
 }
 
 .back-button {
-    height: 100px;
-    width: 100px;
+    height: 50px;
+    width: 50px;
     border: none;
     background-color: transparent;
     svg {
@@ -201,7 +226,7 @@
 }
 
 .save-button {
-    min-width: 100%;
+    width: 100%;
     height: 50px;
     padding: 12px;
     background: var(--third-color);
@@ -226,7 +251,8 @@
 /* Form Container */
 
 .subject-modal-content form,
-.modal-content form {
+.modal-content form,
+.faculty-modal-content form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -238,7 +264,8 @@
 
 .modal-info-container label,
 .subject-modal-content label,
-.modal-content label {
+.modal-content label,
+.faculty-modal-content label {
     font-weight: bold;
     width: 100%;
 }
@@ -246,7 +273,9 @@
 /* Input, Select, and Textarea Fields */  
 .subject-modal-content textarea, 
 .subject-modal-content input,
-.modal-content input  { 
+.modal-content input,
+.faculty-modal-content input,
+.faculty-modal-content textarea { 
     font-size: 1em;
     width: 100%;
     height: 30px;
@@ -259,7 +288,8 @@
 }
   
 .subject-modal-content select,
-.modal-content select {
+.modal-content select,
+.faculty-modal-content select {
     width: 100%;
     height: 30px;
     padding: 5px;
@@ -270,16 +300,19 @@
     color: #333;
 }
 
-.modal-content input::placeholder {
+.modal-content input::placeholder,
+.faculty-modal-content input::placeholder {
     color: #333;
 }
 
 /* Placeholder Text Color */
-.modal-content input::placeholder {
+.modal-content input::placeholder,
+.faculty-modal-content input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.modal-content form label {
+.modal-content form label,
+.faculty-modal-content form label {
     text-align: center;
 }
 
@@ -295,7 +328,8 @@
     margin-top: 10px;
 }
 
-.modal-content input[type="checkbox"] {
+.modal-content input[type="checkbox"],
+.faculty-modal-content input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: #333;
@@ -303,25 +337,107 @@
 }
 
 
-
+@media (max-width: 800px) {
+    .modal-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: scroll;
+    }
+    .modal-content {
+        width: 90%;
+        height: 950px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: 
+            "info1 info2"
+            "info1 info2"
+            "info3 info4"
+        ;
+        margin-top: 150px;
+        padding: 1em;
+    }
+    .faculty-modal-content  {
+        width: 90%;
+        height: 950px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: 
+            "info1 info2"
+            "info1 info2"
+            "info3 info4"
+        ;
+        margin-top: 150px;
+        padding: 1em;
+    }
+    .file-upload-content  {
+        width: 350px;
+        height: 400px;
+        padding: 2em;
+        gap: 1em;
+        z-index: 20;
+        overflow: hidden;
+    }
+}
 
 @media (max-width: 425px) {
     .modal-content {
+        height: 1760px;
+        width: 100%;
+        margin: 0 10px;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
+        grid-template-rows: 750px;
         grid-template-areas: 
             "info1"
             "info2"
             "info4"
             "info3"
         ;
+        margin-top: 1000px;
+        padding: 1em;
     }
-    .modal-content button {
-        width: 80vw;    
+    .faculty-modal-content  {
+        height: 1400px;
+        width: 100%;
+        margin: 0 10px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 450px 1fr 50px 50px;
+        grid-template-areas: 
+            "info1"
+            "info2"
+            "info4"
+            "info3"
+        ;
+        margin-top: 650px;
+        padding: 1em;
+    }
+    
+    .modal-content button,
+    .faculty-modal-content button {
+        width: 100%;    
     }
     .modal-content select,
     .modal-content textarea,
-    .modal-content input  { 
-        min-width: 100%;
+    .modal-content input,
+    .faculty-modal-content select,
+    .faculty-modal-content textarea,
+    .faculty-modal-content input { 
+        width: 100%;
+    }
+    .file-upload-content  {
+        width: 90%;
+        height: 50%;
+        padding: 1em;
+        z-index: 20;
+        overflow: hidden;
+    }
+    .header {
+        display: flex;
+        justify-content: start;
+        align-items: left;
+    }
+    .header button {
+        height: 50px;
+        width: 50px;
     }
 }

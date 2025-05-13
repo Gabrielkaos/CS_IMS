@@ -10,32 +10,11 @@
   </div>
 
   <div class="student-stats-container container" style="grid-area: box-2">
-    <canvas id="yearLevelChart" height="15" width="50"></canvas>
-    <div class="age-stats-card-container">
-      {% for level in year_level_data %}
-        <div class="student-card-container">
-          <span>Year {{ level.year_level }}: {{ level.count }}</span>
-        </div>
-      {% endfor %}
-    </div>
+    <canvas id="yearLevelChart"></canvas>
   </div>
 
   <div class="age-stats-container container" style="grid-area: box-3">
-    <canvas id="ageStatsChart" height="80" width"100"></canvas>
-    <div class="age-stats-card-container">
-      <div class="age-card-container">
-        <span>Average Age</span> 
-        {{ average_age }}
-      </div>
-      <div class="age-card-container">
-        <span>Youngest Student Age</span>
-        {{ min_age }}
-      </div>
-      <div class="age-card-container">
-          <span>Oldest Student Age</span>
-          {{ max_age }}
-      </div>
-    </div>
+    <canvas id="ageStatsChart"></canvas>
   </div>
 </div>
 
@@ -65,11 +44,12 @@
   });
 
   const yearLevelChart = new Chart(document.getElementById('yearLevelChart'), {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: [{% for level in year_level_data %}'Year {{ level.year_level }}',{% endfor %}],
       datasets: [{
         label: 'Students per Year Level',
+        borderColor: 'fff',
         data: [{% for level in year_level_data %}{{ level.count }},{% endfor %}],
         backgroundColor: ['#2e754b'],
       }]
@@ -95,6 +75,7 @@
         datasets: [{
           label: 'Student Age Statistics',
           data: [{{ average_age }}, {{ min_age }}, {{ max_age }}],
+          borderColor: 'fff',
           borderWidth: 1,
           backgroundColor: ['#094221', '#2e754b', '#277548', '#3ca36c '],
         }]

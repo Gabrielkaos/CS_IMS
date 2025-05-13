@@ -2,34 +2,6 @@
 
 <h1 style="color: #333; margin-bottom: 1em">Student</h1>
 
-<div id="wrapper" class="modal-wrapper" style="display: none">
-  <div id="attendanceModal" class="file-upload-content">
-    <span id="closeModalBtn" class="close">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="30px"
-        viewBox="0 -960 960 960"
-        width="30px"
-        fill="#333  "
-      >
-        <path
-          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-        />
-      </svg>
-    </span>
-    <h2>Upload File</h2>
-    <form
-      method="post"
-      enctype="multipart/form-data"
-      class="form-container"
-      action="{% url 'upload_excel' %}"
-    >
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit"><span>UPLOAD</span></button>
-    </form>
-  </div>
-</div>
-
 <div class="menu-2-container">
   <div class="menu-2">
     <button
@@ -61,6 +33,35 @@
         />
       </svg>
     </button>
+  </div>
+</div>
+
+
+<div id="wrapper" class="modal-wrapper" style="display: none">
+  <div id="attendanceModal" class="file-upload-content">
+    <span id="closeModalBtn" class="close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="30px"
+        viewBox="0 -960 960 960"
+        width="30px"
+        fill="#333  "
+      >
+        <path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        />
+      </svg>
+    </span>
+    <h2>Upload File</h2>
+    <form
+      method="post"
+      enctype="multipart/form-data"
+      class="form-container"
+      action="{% url 'upload_excel' %}"
+    >
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit"><span>UPLOAD</span></button>
+    </form>
   </div>
 </div>
 
