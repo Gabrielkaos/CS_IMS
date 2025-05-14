@@ -351,6 +351,7 @@ def student_update(request, pk):
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student, provinces=provinces)
         if form.is_valid():
+            print("Form valid student update")
             form1 = form.save()
             
             course = Course.objects.get(id=request.POST["course"])
