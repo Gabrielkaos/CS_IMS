@@ -29,13 +29,13 @@ body {
     display: grid;
     grid-template-columns: auto 1fr;
 }
-
-.smooch-regular {
-    font-family: "Smooch", cursive;
-    font-size: 1.9em;
+.marck-script-regular {
+    font-family: "Marck Script", cursive;
+    font-size: 2em;
     font-weight: 400;
     font-style: normal;
-}
+  }
+  
     
 
 
@@ -629,11 +629,12 @@ textarea:focus {
 
 .card-container {
     height: 500px;
-    max-width: 350px;
+    max-width: 450px;
     width: 100%;
     flex-wrap: wrap;
     box-shadow: 0 8px 24px hsla(0, 0%, 0%, .15);
-    background-color: var(--fourth-color);
+    background-color: transparent;
+    border: 2px solid var(--fourth-color);
     margin-inline: auto;
     padding: 0 1.5em;
     border-radius: 1rem;
@@ -666,8 +667,11 @@ textarea:focus {
 
 .card-discription {
     display: block;
-    font-size: 16px;
+    font-size: 12px;
     margin-bottom: .25rem;
+}
+.card-discription span {
+    font-weight: 600;
 }
 
 .card-button {

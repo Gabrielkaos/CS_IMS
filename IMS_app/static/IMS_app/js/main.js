@@ -1,6 +1,6 @@
 
-const toggleButton = document.getElementById('toggle-button')
-const sidebar = document.getElementById('sidebar')
+const toggleButton = document.getElementById('toggle-button');
+const sidebar = document.getElementById('sidebar');
 
 
 // Toggle sidebar button
@@ -14,5 +14,3 @@ document.addEventListener("DOMContentLoaded", showPieChart)
 function showPieChart() {
     console.log("")
 }
-
-
