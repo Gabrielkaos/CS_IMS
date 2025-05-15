@@ -286,8 +286,9 @@ main p {
 }
 
 .gender-stats-container {
-    background-color: var(--secondary-color);
-    border: none;
+    background-color: transparent;
+    color: #333;
+    border: 5px solid var(--secondary-color);
     height: 100%;
     width: 100%;
 }
@@ -297,8 +298,9 @@ main p {
 }
 
 .student-stats-container {
-    background-color: var(--secondary-color);
-    border: none;
+    background-color: transparent;
+    color: #333;
+    border: 5px solid var(--secondary-color);
     height: 100%;
     width: 100%;
 }
@@ -308,8 +310,9 @@ main p {
 }
 
 .age-stats-container {
-    background-color: var(--fourth-color);
-    border: none;
+    background-color: transparent;
+    color: #333;
+    border: 5px solid var(--fourth-color);
     height: 100%;
     width: 100%;
 }
