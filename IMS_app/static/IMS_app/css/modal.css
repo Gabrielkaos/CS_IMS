@@ -393,8 +393,9 @@
             "info4"
             "info3"
         ;
-        margin-top: 1000px;
-        padding: 1em;
+        margin-top: 1100px;
+        margin-bottom: 10px;
+        padding: 1.5em;
     }
     .faculty-modal-content  {
         height: 1400px;
@@ -408,8 +409,9 @@
             "info4"
             "info3"
         ;
-        margin-top: 650px;
-        padding: 1em;
+        margin-top: 750px;
+        margin-bottom: 10px;
+        padding: 1.5em;
     }
     
     .modal-content button,
