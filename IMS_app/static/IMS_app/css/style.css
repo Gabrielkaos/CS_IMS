@@ -95,10 +95,16 @@ body {
     border-radius: .5em;
     padding: .85em;
     text-decoration: none;
+    font-size: 1.2em;
     color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 1.5em;
+}
+
+.logo {
+    font-weight: 400;
+    font-size: 3em;
 }
 
 #sidebar svg {
