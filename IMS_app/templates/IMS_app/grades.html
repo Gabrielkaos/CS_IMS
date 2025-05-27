@@ -9,8 +9,61 @@
       <h2 style="color: #333; margin-bottom: 1em">Grades</h2>
 </div>
 
+<div id="wrapper" class="modal-wrapper" style="display: none">
+  <div id="attendanceModal" class="file-upload-content">
+    <span id="closeModalBtn" class="close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="30px"
+        viewBox="0 -960 960 960"
+        width="30px"
+        fill="#333  "
+      >
+        <path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        />
+      </svg>
+    </span>
+    <h2>Add Grade</h2>
+        <form class="modal-content container"
+        action="{% url 'add_grade' student.pk %}"
+        method="post">
+            {% csrf_token %}
 
+            <div class="modal-info-container" style="grid-area: info1">
+                <label for="course">Select Subject</label>
+                <select required name="course" id="course">
+                    {% for subject in subjects%}
+                    <option value="{{subject.id}}">{{subject.title}}</option>
+                    {%endfor%}
+                </select>
+                <label for="mid">Midterm Grade</label>
+                <input type="number" step="0.01" min="0" max="100" name="mid" id="mid" required>
 
+                <!-- Input for Final Grade -->
+                <label for="finals">Final Grade</label>
+                <input type="number" step="0.01" min="0" max="100" name="finals" id="finals" required>
+            </div>
+            <!-- Input for Midterm Grade -->
+        
+
+            
+                    
+        <div class="modal-info-container" style="grid-area: info2">
+            <button class="save-button" type="submit">Save</button>
+        </div>
+        </form>
+    
+  </div>
+</div>
+
+<div class="menu-2-container">
+  <div class="menu-2">
+    <button id="openModalBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+    </button>
+  </div>
+</div>
 <table id="students" class="table">
     <thead>
         <tr>
@@ -23,14 +76,14 @@
     </thead>
     <tbody>
         
-        {% for sub in subs %}
-        <tr></tr>
-            <td>{{sub.title}}</td>
-            <td>{{mid}}</td>
-            <td>{{finals}}</td>
-            <td>{{average}}</td>
+        {% for grade in grades %}
+        <tr>
+            <td>{{ grade.subject.title }}</td>
+            <td>{{ grade.mid }}</td>
+            <td>{{ grade.finals }}</td>
+            <td>{{ grade.average }}</td>
         </tr>
-        {% endfor%}
+    {% endfor %}
     
     </tbody>
 </table>
@@ -40,4 +93,6 @@
     $("#students").DataTable();
   });
 </script>
+{% load static %}
+<script src="{% static 'IMS_app/js/modal.js' %}"></script>
 {% endblock %}

@@ -1,17 +1,21 @@
 from django import forms
-from .models import Student, Faculty, Subject, Course
+from .models import Student, Faculty, Subject, Course, Grade
 
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['course_code', 'title', 'description', 'units', 'year']
+        fields = ['course_code', 'title', 'description', 'units']
         widgets = {
             'course_code': forms.TextInput(),
             'title': forms.TextInput(),
             'description': forms.Textarea(attrs={'rows': 3}),
-            'units': forms.NumberInput(),
-            'year': forms.NumberInput(attrs={'max': 4,'min':1, 'placeholder':1})
+            'units': forms.NumberInput()
         }
+
+class GradeForm(forms.ModelForm):
+    class Meta:
+        model = Grade
+        fields = ['student', 'subject', 'mid', 'finals']
 
 class CourseForm(forms.ModelForm):
     class Meta:

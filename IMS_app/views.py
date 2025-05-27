@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student, Faculty, Subject, Course
+from .models import Student, Faculty, Subject, Course, Grade
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm, CourseForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm, CourseForm, GradeForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 import json
 import openpyxl
 import os
+
 
 def get_provinces():
     # Load provinces from the local JSON file
@@ -138,9 +139,7 @@ def upload_excel(request):
                         permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
                         emergency_contact_name=emergency_contact_name.title(),
                         emergency_contact_phone=emergency_contact_phone,
-                        emergency_contact_relation=emergency_contact_relation[0].upper(),
-                        mid = 1,
-                        finals = 1
+                        emergency_contact_relation=emergency_contact_relation[0].upper()
                     )
                 except:
                     continue
@@ -288,8 +287,6 @@ def student_create(request):
             form1 = form.save(commit=False)
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
-            form1.finals = 1
-            form1.mid = 1
             form1.save()
             return redirect('student_list')
     else:
@@ -426,18 +423,23 @@ def logoutView(req):
 
 def update_grades(req, pk):
     student = get_object_or_404(Student, pk=pk)
-
-    mid = f"{student.mid:.2f}"
-    finals = f"{student.finals:.2f}"
-    average = f"{((float(mid) + float(finals))/2):.2f}"
-
-    subs = Subject.objects.all()
-    final_subs = []
-    for sub in subs:
-        # print(sub.year)
-        if int(sub.year)==int(student.year_level):
-            final_subs.append(sub)
-
-    # print(final_subs)
+    subjects = Subject.objects.all()
+    # Get all grades related to this student
+    grades = Grade.objects.filter(student=student).select_related('subject')
     
-    return render(req, 'IMS_app/grades.html', {'subs':final_subs, 'mid':mid, 'finals':finals, 'average':average})
+    return render(req, 'IMS_app/grades.html', {
+        'student': student,
+        'grades': grades,
+        'subjects':subjects
+    })
+    
+def add_grade(request, pk):
+    if request.method == 'POST':
+        student = get_object_or_404(Student,pk=pk)
+        Grade.objects.create(
+            student = student, 
+            subject = Subject.objects.get(id=request.POST.get("course")),
+            mid = float(request.POST.get("mid")),
+            finals = float(request.POST.get("finals")),
+                    )
+        return redirect("student_list")
