@@ -71,6 +71,9 @@ class Faculty(models.Model):
 
 class Student(models.Model):
 
+    mid = models.IntegerField(blank=True)
+    finals = models.IntegerField(blank=True)
+
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),

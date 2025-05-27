@@ -57,5 +57,5 @@ urlpatterns = [
     path('other_info/<int:pk>', student_info, name='other_info'),
     path('upload-excel/', upload_excel, name='upload_excel'),
 
-    path('update_grades/', update_grades, name='upload_grades'),
+    path('update_grades/<int:pk>', update_grades, name='update_grades')
 ]

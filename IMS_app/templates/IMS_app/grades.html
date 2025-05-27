@@ -1,8 +1,43 @@
-{% extends "IMS_app/base.html" %} {% load static %} 
+{% extends "IMS_app/base.html" %} 
 
-
+{% load static %} 
 {% block content %}
+<div class="header">
+      <button class="back-button" type="button" onclick="window.location.href='{% url 'student_list' %}'">
+          <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+      </button>
+      <h2 style="color: #333; margin-bottom: 1em">Grades</h2>
+</div>
 
 
 
+<table id="students" class="table">
+    <thead>
+        <tr>
+            <th>Subjects</th>
+            <th>Midterms</th>
+            <th>Finals</th>
+            <th>Average</th>
+        </tr>
+        
+    </thead>
+    <tbody>
+        
+        {% for sub in subs %}
+        <tr></tr>
+            <td>{{sub.title}}</td>
+            <td>{{mid}}</td>
+            <td>{{finals}}</td>
+            <td>{{average}}</td>
+        </tr>
+        {% endfor%}
+    
+    </tbody>
+</table>
+
+<script>
+  $(document).ready(function () {
+    $("#students").DataTable();
+  });
+</script>
 {% endblock %}

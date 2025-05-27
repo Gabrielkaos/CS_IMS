@@ -138,7 +138,9 @@ def upload_excel(request):
                         permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
                         emergency_contact_name=emergency_contact_name.title(),
                         emergency_contact_phone=emergency_contact_phone,
-                        emergency_contact_relation=emergency_contact_relation[0].upper()
+                        emergency_contact_relation=emergency_contact_relation[0].upper(),
+                        mid = 1,
+                        finals = 1
                     )
                 except:
                     continue
@@ -286,6 +288,8 @@ def student_create(request):
             form1 = form.save(commit=False)
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
+            form1.finals = 1
+            form1.mid = 1
             form1.save()
             return redirect('student_list')
     else:
@@ -420,5 +424,20 @@ def logoutView(req):
     return redirect("login")
 
 
-def update_grades(req):
-    return render(req, 'IMS_app/grades.html')
+def update_grades(req, pk):
+    student = get_object_or_404(Student, pk=pk)
+
+    mid = f"{student.mid:.2f}"
+    finals = f"{student.finals:.2f}"
+    average = f"{((float(mid) + float(finals))/2):.2f}"
+
+    subs = Subject.objects.all()
+    final_subs = []
+    for sub in subs:
+        # print(sub.year)
+        if int(sub.year)==int(student.year_level):
+            final_subs.append(sub)
+
+    # print(final_subs)
+    
+    return render(req, 'IMS_app/grades.html', {'subs':final_subs, 'mid':mid, 'finals':finals, 'average':average})
