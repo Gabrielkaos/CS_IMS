@@ -19,7 +19,7 @@ from .views import register, dashboard,  upload_excel, \
     student_list, student_create, student_update, student_delete, student_info, logoutView, \
     loginView, faculty_list, faculty_update, faculty_create, faculty_delete, faculty_info,\
     upload_faculty,subject_list, subject_create, subject_update, subject_delete, subject_info, \
-    course_list
+    course_list, update_grades
 
 urlpatterns = [
 
@@ -56,4 +56,6 @@ urlpatterns = [
     path('delete/<int:pk>/', student_delete, name='student_delete'),
     path('other_info/<int:pk>', student_info, name='other_info'),
     path('upload-excel/', upload_excel, name='upload_excel'),
+
+    path('update_grades/', update_grades, name='upload_grades'),
 ]

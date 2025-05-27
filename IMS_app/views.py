@@ -397,10 +397,28 @@ def subject_delete(request, pk):
 def course_list(request):
     
     coursies = Course.objects.all()
-    return render(request, 'IMS_app/course_list.html', {'coursies': coursies})
+    students = Student.objects.all()
+
+    first = 0; second = 0; third = 0; fourth = 0;
+
+    for student in students:
+        if student.year_level == 1:
+            first+=1
+        elif student.year_level == 2:
+            second+=1
+        elif student.year_level == 3:
+            third+=1
+        else:
+            fourth+=1
+
+    return render(request, 'IMS_app/course_list.html', {'first':first,'second':second,'third':third,'fourth':fourth})
 
 def logoutView(req):
 
     logout(req)
 
     return redirect("login")
+
+
+def update_grades(req):
+    return render(req, 'IMS_app/grades.html')

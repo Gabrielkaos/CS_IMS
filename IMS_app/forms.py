@@ -4,12 +4,13 @@ from .models import Student, Faculty, Subject, Course
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['course_code', 'title', 'description', 'units']
+        fields = ['course_code', 'title', 'description', 'units', 'year']
         widgets = {
             'course_code': forms.TextInput(),
             'title': forms.TextInput(),
             'description': forms.Textarea(attrs={'rows': 3}),
-            'units': forms.NumberInput()
+            'units': forms.NumberInput(),
+            'year': forms.NumberInput(attrs={'max': 4,'min':1, 'placeholder':1})
         }
 
 class CourseForm(forms.ModelForm):

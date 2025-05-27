@@ -143,7 +143,7 @@ class Subject(models.Model):
     description = models.TextField(blank=True)
     units = models.PositiveIntegerField(default=3)
     instructor = models.ForeignKey('Faculty', on_delete=models.SET_NULL, null=True, blank=True, related_name='courses')
-
+    year = models.IntegerField()
 
     def __str__(self):
         return f"{self.course_code} - {self.title}"

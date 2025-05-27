@@ -1,15 +1,28 @@
 {% extends "IMS_app/base.html" %} {% load static %} {% block content %}
 
-<h1 style="color: #333; margin-bottom: 1em">Courses</h1>
+<h1 style="color: #333; margin-bottom: 1em">Year Level</h1>
 
 <div class="cards-wrapper">
-    {% for course in coursies %}
     <div class="card-container">
-      <span class="card-title"><h1>{{ course.name }}</h1></span>
-      <span class="card-discription">{{ course.description }}</span>
-      <span>Enrolled Students: {{ course.students.count }}</span>
+      <span class="card-title"><h1>CS1</h1></span>
+      <span class="card-discription">Enrolled in First Year</span>
+      <span>Enrolled Students: {{ first }}</span>
     </div>
-    {% endfor %}
+    <div class="card-container">
+      <span class="card-title"><h1>CS2</h1></span>
+      <span class="card-discription">Enrolled in Second Year</span>
+      <span>Enrolled Students: {{ second }}</span>
+    </div>
+    <div class="card-container">
+      <span class="card-title"><h1>CS3</h1></span>
+      <span class="card-discription">Enrolled in Third Year</span>
+      <span>Enrolled Students: {{ third }}</span>
+    </div>
+    <div class="card-container">
+      <span class="card-title"><h1>CS4</h1></span>
+      <span class="card-discription">Enrolled in Fourth Year</span>
+      <span>Enrolled Students: {{ fourth }}</span>
+    </div>
 </div>
 
 <script>
