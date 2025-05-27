@@ -119,7 +119,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 200px;
+    min-height: 250px;
     gap: 1em;
 }
 
@@ -286,7 +286,8 @@
     outline: none;
     color: #333;
 }
-  
+
+.modal-info-container select,
 .subject-modal-content select,
 .modal-content select,
 .faculty-modal-content select {

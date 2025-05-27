@@ -25,7 +25,7 @@
       </svg>
     </span>
     <h2>Add Grade</h2>
-        <form class="modal-content container"
+        <form
         action="{% url 'add_grade' student.pk %}"
         method="post">
             {% csrf_token %}
