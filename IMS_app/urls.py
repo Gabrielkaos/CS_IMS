@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.urls import path
 from .views import register, dashboard,  upload_excel, \
-    student_list, student_create, student_update, student_delete, student_info, logoutView, \
-    loginView, faculty_list, faculty_update, faculty_create, faculty_delete, faculty_info,\
+    student_list, student_update, student_delete, student_info, logoutView, \
+    loginView, faculty_list, faculty_update, faculty_info,\
         subject_list, subject_create, subject_update, subject_delete, subject_info, \
     course_list, update_grades, add_grade
 
@@ -43,14 +43,11 @@ urlpatterns = [
     #faculty
     path('show_faculty/', faculty_list, name='faculty_list'),
     path('faculty_update/<int:pk>/', faculty_update, name='faculty_update'),
-    path('faculty_create/', faculty_create, name='faculty_create'),
-    path('faculty_delete/<int:pk>/', faculty_delete, name='faculty_delete'),
     path('faculty_info/<int:pk>', faculty_info, name='faculty_info'),
 
 
     #students
     path('show_students/', student_list, name='student_list'),
-    path('create/', student_create, name='student_create'),
     path('update/<int:pk>/', student_update, name='student_update'),
     path('delete/<int:pk>/', student_delete, name='student_delete'),
     path('other_info/<int:pk>', student_info, name='other_info'),

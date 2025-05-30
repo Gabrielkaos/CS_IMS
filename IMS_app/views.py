@@ -25,6 +25,18 @@ def upload_excel(request):
             subject_description = sheet['C9'].value
             instructor_name = sheet['C10'].value
 
+            sem_sy = sheet['C4'].value
+            semester1 = str(sem_sy).split(",")[0].lower()
+            sy = str(sem_sy).split(",")[1].strip()
+
+            real_sem = None
+            if semester1.startswith("first"):
+                real_sem = 1
+            elif semester1.startswith("second"):
+                real_sem = 2
+            else:
+                real_sem = 3
+
             # Get or create Course
             course_obj, _ = Course.objects.get_or_create(name=str(course_and_section).split()[0])
 
@@ -53,6 +65,8 @@ def upload_excel(request):
                     student_id=student_id,
                     course = course_obj,
                     year_level = int(list(section)[0]),
+                    semester = real_sem,
+                    school_year = sy,
                     defaults={'name': name, 'section': section}
                 )
                 student_obj.subjects.add(subject_obj)
@@ -135,7 +149,9 @@ def student_info(request, pk):
 
 def faculty_info(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
-    return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty})
+    subjects1 = faculty.subjects.all()
+    print(subjects1)
+    return render(request, 'IMS_app/faculty_info.html', {'faculty': faculty,"subjects":subjects1})
 
 def subject_info(request, pk):
     course = get_object_or_404(Subject, pk=pk)
@@ -143,10 +159,29 @@ def subject_info(request, pk):
 
 @login_required
 def student_list(request):
+    school_years = []
+    school_year = request.GET.get('school_year')
+    semester = request.GET.get('semester')
+
     students = Student.objects.all()
+
+    for student in students:
+        if student.school_year not in school_years:
+            school_years.append(student.school_year)
+
+    if school_year:
+        students = students.filter(school_year=school_year)
+    if semester:
+        students = students.filter(semester=semester)
+
     form = UploadFileForm()
-    coursies = Course.objects.all()
-    return render(request, 'IMS_app/student_list.html', {'students': students, 'form':form,'coursies':coursies})
+    return render(request, 'IMS_app/student_list.html', 
+                  {'students': students, 
+                   'form':form, 
+                   "semesters":[1,2,3],
+                   "school_years":school_years,
+                   "selected_year":school_year,
+                   "selected_semester":semester})
 @login_required
 def faculty_list(request):
     faculties = Faculty.objects.all()
@@ -157,28 +192,6 @@ def faculty_list(request):
 def subject_list(request):
     coursies = Subject.objects.all()
     return render(request, 'IMS_app/subject_list.html', {'coursies': coursies})
-
-@login_required
-def student_create(request):
-    coursies = Course.objects.all()
-    print("create")
-    if request.method == 'POST':
-        form = StudentForm(request.POST)
-        print("post")
-        if form.is_valid():
-            print("valid")
-            form1 = form.save(commit=False)
-            course = Course.objects.get(id=request.POST["course"])
-            form1.course = course
-            form1.section = request.POST["section"]
-            form1.year_level = int(list(request.POST["section"])[0])
-            print("saved")
-            form1.save()
-            return redirect('student_list')
-    else:
-        print("Not POST")
-        form = StudentForm()
-    return render(request, 'IMS_app/student_form.html', {'form': form,'coursies': coursies, 'sections':sections})
 
 @login_required
 def subject_create(request):
@@ -217,19 +230,6 @@ def subject_update(request, pk):
         form = SubjectForm(instance=course)
     return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
 
-
-def faculty_create(request):
-    provinces = get_provinces()
-    if request.method == 'POST':
-        form = FacultyForm(request.POST, provinces=provinces)
-        if form.is_valid():
-            form.save()
-            return redirect('faculty_list')
-    else:
-        form = FacultyForm(provinces=provinces)
-    return render(request, 'IMS_app/faculty_form.html', {'form': form, 'provinces': provinces})
-
-
 @login_required
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -256,27 +256,20 @@ def student_update(request, pk):
 @login_required
 def faculty_update(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
-    provinces = get_provinces()
     if request.method == 'POST':
-        form = FacultyForm(request.POST, instance=faculty, provinces=provinces)
+        form = FacultyForm(request.POST, instance=faculty)
         if form.is_valid():
             form.save()
             return redirect('faculty_list')
     else:
-        form = FacultyForm(instance=faculty, provinces=provinces)
-    return render(request, 'IMS_app/faculty_form.html', {'form': form, 'provinces': provinces})
+        form = FacultyForm(instance=faculty)
+    return render(request, 'IMS_app/faculty_form.html', {'form': form})
 
 @login_required
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
     student.delete()
     return redirect('student_list')
-
-
-def faculty_delete(request, pk):
-    faculty = get_object_or_404(Faculty, pk=pk)
-    faculty.delete()
-    return redirect('faculty_list')
 
 def subject_delete(request, pk):
     course = get_object_or_404(Subject, pk=pk)

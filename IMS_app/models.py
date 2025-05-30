@@ -22,11 +22,13 @@ class Student(models.Model):
     section = models.CharField(max_length=10) # example 1C, 2B
     year_level = models.IntegerField()
 
+    school_year = models.CharField(max_length=9)
+    semester = models.IntegerField()
+
     # subjects = models.ForeignKey('Subject', related_name='students')
-    subjects = models.ManyToManyField('Subject', through='Enrollment', related_name='students')
+    subjects = models.ManyToManyField('Subject', related_name='students')
 
     def __str__(self):
-        
         return f"{self.name} ({self.student_id})"
 
 class Subject(models.Model):
@@ -52,16 +54,16 @@ class Grade(models.Model):
     def average(self):
         return round((self.mid + self.finals) / 2, 2)
 
-class Enrollment(models.Model):
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)
-    subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
-    midterm_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    finals_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    semester = models.CharField(max_length=10, blank=True)
-    school_year = models.CharField(max_length=9, blank=True)  # e.g., '2024-2025'
+# class Enrollment(models.Model):
+#     student = models.ForeignKey('Student', on_delete=models.CASCADE)
+#     subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
+#     midterm_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+#     finals_grade = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+#     semester = models.CharField(max_length=10, blank=True)
+#     school_year = models.CharField(max_length=9, blank=True)  # e.g., '2024-2025'
 
-    class Meta:
-        unique_together = ('student', 'subject')
+#     class Meta:
+#         unique_together = ('student', 'subject')
 
-    def __str__(self):
-        return f"{self.student} - {self.subject} ({((self.midterm_grade + self.finals_grade)/2):.2f})"
+#     def __str__(self):
+#         return f"{self.student} - {self.subject} ({((self.midterm_grade + self.finals_grade)/2):.2f})"
