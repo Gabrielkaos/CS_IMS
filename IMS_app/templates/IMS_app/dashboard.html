@@ -1,15 +1,131 @@
-{% extends "IMS_app/base.html" %} {% load static %} {% block content %}
+{% extends "IMS_app/base.html" %}
+{% load static %}
+
+{% block content %}
 <h1 style="color: #333; margin-bottom: 1em; margin-left: 8px">CS Information Management</h1>
 
-<div class="wrapper">
-  <!-- <div class="gender-stats-container container" style="grid-area: box-1">
-    <p><strong>Total Students:</strong> {{ total_students }}</p>
+<div>
+
+  <!-- Top metrics -->
+  <div>
+    <div>
+      <div>
+        <div>
+          <h5>Total Students</h5>
+          <h3>{{ total_students }}</h3>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <div>
+          <h5>Total Subjects</h5>
+          <h3>{{ total_subjects }}</h3>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <div>
+          <h5>Total Faculty</h5>
+          <h3>{{ total_faculty }}</h3>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <div>
+          <h5>Total Enrollments</h5>
+          <h3>{{ total_enrollments }}</h3>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="student-stats-container container" style="grid-area: box-2">
-    <canvas id="yearLevelChart"></canvas>
-  </div> -->
-</div>
+  <!-- Current SY and Semester -->
+  <div>
+    <div>
+      <div>
+        <h5>Current School Year</h5>
+        <p>{{ current_sy|default:"N/A" }}</p>
+      </div>
+    </div>
+    <div>
+      <div>
+        <h5>Current Semester</h5>
+        <p>
+          {% if current_sem == 1 %}1st Semester
+          {% elif current_sem == 2 %}2nd Semester
+          {% elif current_sem == 3 %}Summer
+          {% else %}N/A
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Top Subjects -->
+  <h4>📘 Top Subjects by Student Enrollment</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Subject Code</th>
+        <th>Description</th>
+        <th>Student Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in top_subjects %}
+      <tr>
+        <td>{{ subject.code }}</td>
+        <td>{{ subject.description }}</td>
+        <td>{{ subject.student_count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No data available</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Students per Year Level -->
+  <h4>🎓 Students per Year Level</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Year Level</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in year_level_data %}
+      <tr>
+        <td>{{ item.year_level }}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="2">No data</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Students per Course -->
+  <h4>📚 Students per Course</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in course_data %}
+      <tr>
+        <td>{{ item.course__name }}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
 {% endblock %}

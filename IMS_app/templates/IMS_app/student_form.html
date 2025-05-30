@@ -18,14 +18,6 @@
             <label for="id_student_id">Student ID</label>
             {{ form.student_id }}
 
-            <label for="id_section">Section</label>
-            <select name="section" id="id_section">
-                {% for section in sections%}
-                    <option value="{{ section }}" {% if student.section == section %}selected{% endif %}>{{ section }}</option>
-                {% endfor %}
-            </select>
-
-
 
             <label for="course">Select Course</label>
             <select required name="course" id="course">

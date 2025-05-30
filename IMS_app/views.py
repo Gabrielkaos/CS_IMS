@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student, Faculty, Subject, Course, Grade
+from .models import Student, Faculty, Subject, Course, Grade, Enrollment,EnrollmentSubject
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm, CourseForm, GradeForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import openpyxl
 
-sections = "1A,1B,1C,2A,2B,2C,3A,3B,3C,4A,4B,4C,1,2,3,4".split(",")
 
 def upload_excel(request):
     if request.method == 'POST':
@@ -26,54 +25,62 @@ def upload_excel(request):
             instructor_name = sheet['C10'].value
 
             sem_sy = sheet['C4'].value
-            semester1 = str(sem_sy).split(",")[0].lower()
+            semester_str = str(sem_sy).split(",")[0].lower()
             sy = str(sem_sy).split(",")[1].strip()
 
-            real_sem = None
-            if semester1.startswith("first"):
+            if semester_str.startswith("first"):
                 real_sem = 1
-            elif semester1.startswith("second"):
+            elif semester_str.startswith("second"):
                 real_sem = 2
             else:
                 real_sem = 3
 
-            # Get or create Course
+            year_level = int(section[0]) if section[0].isdigit() else 1
+
             course_obj, _ = Course.objects.get_or_create(name=str(course_and_section).split()[0])
 
-            # Get or create Subject
             subject_obj, _ = Subject.objects.get_or_create(
                 code=code,
                 defaults={'description': subject_description}
             )
 
-            # Get or create Faculty
             faculty_obj, _ = Faculty.objects.get_or_create(name=instructor_name)
-
-            # You can add M2M linking here if needed:
             subject_obj.instructors.add(faculty_obj)
 
-            # Iterate through students starting from row 12
             for row in sheet.iter_rows(min_row=12, values_only=True):
                 if not row[1] or not row[2]:
                     continue
                 student_id = str(row[1]).strip()
                 name = row[2].strip()
 
-                if student_id.startswith("---"):continue
+                if student_id.startswith("---"):
+                    continue
 
                 student_obj, _ = Student.objects.get_or_create(
                     student_id=student_id,
-                    course = course_obj,
-                    year_level = int(list(section)[0]),
-                    semester = real_sem,
-                    school_year = sy,
-                    defaults={'name': name, 'section': section}
+                    defaults={'name': name, 'course': course_obj}
                 )
-                student_obj.subjects.add(subject_obj)
+                print(section)
+                enrollment_obj, _ = Enrollment.objects.get_or_create(
+                    student=student_obj,
+                    school_year=sy,
+                    semester=real_sem,
+                    defaults={
+                        'year_level': year_level,
+                        'section': list(section)[1] if len(section)>1 else section
+                    }
+                )
+
+                # Link subject to enrollment
+                EnrollmentSubject.objects.get_or_create(
+                    enrollment=enrollment_obj,
+                    subject=subject_obj
+                )
 
             return redirect("student_list")
-        form = UploadFileForm()
+
     return redirect("student_list")
+
 
 # Accounts
 def register(request):
@@ -130,17 +137,34 @@ def loginView(request):
 @login_required
 def dashboard(request):
     total_students = Student.objects.count()
+    total_subjects = Subject.objects.count()
+    total_faculty = Faculty.objects.count()
+    total_enrollments = Enrollment.objects.count()
 
+    current_sy = Enrollment.objects.order_by('-school_year').values_list('school_year', flat=True).first()
+    current_sem = Enrollment.objects.order_by('-semester').values_list('semester', flat=True).first()
+
+    # Students per subject (top 5)
+    top_subjects = Subject.objects.annotate(student_count=Count('enrollmentsubject__enrollment__student')) \
+                                  .order_by('-student_count')[:5]
 
     # Students per year level
-    year_level_data = Student.objects.values('year_level').annotate(count=Count('year_level')).order_by('year_level')
+    year_level_data = Enrollment.objects.values('year_level').annotate(count=Count('student'))
 
-    context = {
+    # Students per course
+    course_data = Student.objects.values('course__name').annotate(count=Count('id')).order_by('-count')
+
+    return render(request, 'IMS_app/dashboard.html', {
         'total_students': total_students,
-        'year_level_data': year_level_data
-    }
-
-    return render(request, 'IMS_app/dashboard.html', context)
+        'total_subjects': total_subjects,
+        'total_faculty': total_faculty,
+        'total_enrollments': total_enrollments,
+        'current_sy': current_sy,
+        'current_sem': current_sem,
+        'top_subjects': top_subjects,
+        'year_level_data': year_level_data,
+        'course_data': course_data,
+    })
 
 def student_info(request, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -155,33 +179,55 @@ def faculty_info(request, pk):
 
 def subject_info(request, pk):
     course = get_object_or_404(Subject, pk=pk)
-    return render(request, 'IMS_app/subject_info.html', {'course': course})
+    enrolees_on_sub = EnrollmentSubject.objects.filter(subject=course)
+
+    return render(request, 'IMS_app/subject_info.html', {'course': course,'count1':enrolees_on_sub.count()})
 
 @login_required
 def student_list(request):
-    school_years = []
     school_year = request.GET.get('school_year')
     semester = request.GET.get('semester')
+    year_level = request.GET.get('year_level')
+    subject_id = request.GET.get('subject')
 
+    # Get all students through their enrollments
     students = Student.objects.all()
 
-    for student in students:
-        if student.school_year not in school_years:
-            school_years.append(student.school_year)
+    if school_year or semester or year_level or subject_id:
+        enrollments = Enrollment.objects.all()
+        
+        if school_year:
+            enrollments = enrollments.filter(school_year=school_year)
+        if semester:
+            enrollments = enrollments.filter(semester=semester)
+        if year_level:
+            enrollments = enrollments.filter(year_level=year_level)
+        if subject_id:
+            enrollments = enrollments.filter(
+                enrollmentsubject__subject__id=subject_id
+            )
+        
+        students = Student.objects.filter(enrollments__in=enrollments).distinct()
 
-    if school_year:
-        students = students.filter(school_year=school_year)
-    if semester:
-        students = students.filter(semester=semester)
+    # Get all school years for dropdown
+    school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
+    subjects = Subject.objects.all()
 
     form = UploadFileForm()
-    return render(request, 'IMS_app/student_list.html', 
-                  {'students': students, 
-                   'form':form, 
-                   "semesters":[1,2,3],
-                   "school_years":school_years,
-                   "selected_year":school_year,
-                   "selected_semester":semester})
+    return render(request, 'IMS_app/student_list.html', {
+        'students': students,
+        'form': form,
+        'semesters': [1, 2, 3],
+        'year_levels': [1, 2, 3, 4],
+        'school_years': school_years,
+        'subjects': subjects,
+        'selected_year': school_year,
+        'selected_semester': semester,
+        'selected_year_level': year_level,
+        'selected_subject': subject_id,
+        'student_count': students.count()
+    })
+
 @login_required
 def faculty_list(request):
     faculties = Faculty.objects.all()
@@ -214,21 +260,17 @@ def subject_create(request):
 @login_required
 def subject_update(request, pk):
     course = get_object_or_404(Subject, pk=pk)
-    instructors = Faculty.objects.all()
     if request.method == 'POST':
         form = SubjectForm(request.POST, instance=course)
         if form.is_valid():
             # print('update form cleaned:',form.cleaned_data)
             form1 = form.save(commit=False)
-            instructor = Faculty.objects.get(id=request.POST["faculties"])
-            print(request.POST["faculties"])
-            form1.instructor = instructor
             # print("This is the form",form)
             form1.save()
             return redirect('subject_list')
     else:
         form = SubjectForm(instance=course)
-    return render(request, 'IMS_app/subject_form.html', {'form': form,"instructors":instructors})
+    return render(request, 'IMS_app/subject_form.html', {'form': form})
 
 @login_required
 def student_update(request, pk):
@@ -244,14 +286,11 @@ def student_update(request, pk):
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
 
-            form1.section = request.POST["section"]
-            form1.year_level = int(list(request.POST["section"])[0])
-
             form1.save()
             return redirect('student_list')
     else:
         form = StudentForm(instance=student)
-    return render(request, 'IMS_app/student_form.html', {'form': form,'coursies':coursies, "student":student, "sections":sections})
+    return render(request, 'IMS_app/student_form.html', {'form': form,'coursies':coursies, "student":student})
 
 @login_required
 def faculty_update(request, pk):
@@ -275,26 +314,6 @@ def subject_delete(request, pk):
     course = get_object_or_404(Subject, pk=pk)
     course.delete()
     return redirect('subject_list')
-
-
-def course_list(request):
-    
-    coursies = Course.objects.all()
-    students = Student.objects.all()
-
-    first = 0; second = 0; third = 0; fourth = 0;
-
-    for student in students:
-        if student.year_level == 1:
-            first+=1
-        elif student.year_level == 2:
-            second+=1
-        elif student.year_level == 3:
-            third+=1
-        else:
-            fourth+=1
-
-    return render(request, 'IMS_app/course_list.html', {'first':first,'second':second,'third':third,'fourth':fourth})
 
 def logoutView(req):
 

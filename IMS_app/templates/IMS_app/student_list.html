@@ -69,17 +69,35 @@
       </option>
     {% endfor %}
   </select>
+
+  <label for="year_level">Year Level</label>
+  <select name="year_level" id="year_level" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for year in year_levels %}
+      <option value="{{ year }}" {% if selected_year_level == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="subject">Subject:</label>
+  <select name="subject" id="subject" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for subject in subjects %}
+      <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+        {{ subject.code }} - {{ subject.description }}
+      </option>
+    {% endfor %}
+  </select>
 </form>
 
+
+<p style="color: black;"><strong>Total Students:</strong> {{ student_count }}</p>
 
 <table id="students" class="table">
   <thead>
     <tr>
       <th data-title="Student ID">Student ID</th>
       <th data-title="Course">Course</th>
-      <th data-title="Section">Section</th>
       <th data-title="Name">Name</th>
-      <th data-title="Year Level">Year Level</th>
       <th data-title="Actions">Actions</th>
     </tr>
   </thead>
@@ -88,9 +106,7 @@
     <tr>
       <td data-title="Student ID">{{ student.student_id }}</td>
       <td data-title="Course">{{ student.course.name }}</td>
-      <td data-title="Gender">{{ student.section }}</td>
       <td data-title="Name">{{ student.name }}</td>
-      <td data-title="Year Level">{{ student.year_level }}</td>
       <td data-title="Actions">
         <div class="action-button-container">
           <!--  -->

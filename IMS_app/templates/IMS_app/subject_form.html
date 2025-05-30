@@ -6,32 +6,17 @@
             
         <div class="modal-content-container" style="grid-area: info1">
             <div class="header">
-                <button class="back-button" onclick="window.location.href='{% url 'subject_list' %}'">
+                <button type="button" class="back-button" onclick="window.location.href='{% url 'subject_list' %}'">
                     <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
                 </button>
                 <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Subject</h2>
             </div>
-            <label>Course code</label>
-            {{ form.course_code }}
+            <label>Code</label>
+            {{ form.code }}
             
-            <label>Title</label>
-            {{ form.title }}
-                
             <label>Description</label>
             {{ form.description }}
-                
-            <label>Units</label>
-            {{ form.units }}
 
-
-            
-            
-            <label for="faculties">Select Instructor</label>
-            <select required name="faculties" id="faculties">
-                {% for faculty in instructors%}
-                <option value="{{faculty.id}}">{{faculty.name}}</option>
-                {%endfor%}
-            </select>
                 
         </div>
 
@@ -47,87 +32,5 @@
 </div>
 
 <!-- JavaScript for Dynamic Address Population -->
-<script>
-    // Load cities/municipalities based on the selected province
-    document.getElementById("id_current_province_code").addEventListener("change", function () {
-        const provinceCode = this.value;
-        if (provinceCode) {
-            fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
-                .then(response => response.json())
-                .then(data => {
-                    const citySelect = document.getElementById("id_current_city_code");
-                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-                    document.getElementById("id_current_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
-                    const filteredCities = data.filter(city => city.provinceCode === provinceCode);
-                    filteredCities.forEach(city => {
-                        const option = document.createElement("option");
-                        option.value = city.code;
-                        option.textContent = city.name;
-                        citySelect.appendChild(option);
-                    });
-                });
-        }
-    });
-
-    // Load barangays based on the selected city/municipality
-    document.getElementById("id_current_city_code").addEventListener("change", function () {
-        const cityCode = this.value;
-        if (cityCode) {
-            fetch("{% static 'IMS_app/api/barangays.json' %}")
-                .then(response => response.json())
-                .then(data => {
-                    const barangaySelect = document.getElementById("id_current_barangay_code");
-                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-                    const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
-                    filteredBarangays.forEach(barangay => {
-                        const option = document.createElement("option");
-                        option.value = barangay.code;
-                        option.textContent = barangay.name;
-                        barangaySelect.appendChild(option);
-                    });
-                });
-        }
-    });
-
-    // Repeat the same logic for permanent address fields
-    document.getElementById("id_permanent_province_code").addEventListener("change", function () {
-        const provinceCode = this.value;
-        if (provinceCode) {
-            fetch("{% static 'IMS_app/api/cities-municipalities.json' %}")
-                .then(response => response.json())
-                .then(data => {
-                    const citySelect = document.getElementById("id_permanent_city_code");
-                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-                    document.getElementById("id_permanent_barangay_code").innerHTML = '<option value="">Select Barangay</option>';
-                    const filteredCities = data.filter(city => city.provinceCode === provinceCode);
-                    filteredCities.forEach(city => {
-                        const option = document.createElement("option");
-                        option.value = city.code;
-                        option.textContent = city.name;
-                        citySelect.appendChild(option);
-                    });
-                });
-        }
-    });
-
-    document.getElementById("id_permanent_city_code").addEventListener("change", function () {
-        const cityCode = this.value;
-        if (cityCode) {
-            fetch("{% static 'IMS_app/api/barangays.json' %}")
-                .then(response => response.json())
-                .then(data => {
-                    const barangaySelect = document.getElementById("id_permanent_barangay_code");
-                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-                    const filteredBarangays = data.filter(barangay => barangay.municipalityCode === cityCode);
-                    filteredBarangays.forEach(barangay => {
-                        const option = document.createElement("option");
-                        option.value = barangay.code;
-                        option.textContent = barangay.name;
-                        barangaySelect.appendChild(option);
-                    });
-                });
-        }
-    });
-</script>
 
 {% endblock %}

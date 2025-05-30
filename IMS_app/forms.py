@@ -5,10 +5,6 @@ class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
         fields = ['code', 'description']
-        widgets = {
-            'code': forms.TextInput(),
-            'description': forms.Textarea(attrs={'rows': 3})
-        }
 
 class GradeForm(forms.ModelForm):
     class Meta:
