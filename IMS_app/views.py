@@ -9,6 +9,93 @@ from django.contrib.auth.decorators import login_required
 import openpyxl
 
 
+def upload_grades(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['files']
+            wb = openpyxl.load_workbook(excel_file)
+            sheet = wb.active
+
+            # Extract metadata
+            subject_description = sheet['C4'].value
+            course_year = sheet['C5'].value
+            sem_sy = sheet['B3'].value
+
+            course = str(course_year).split()[0]
+            year = str(course_year).split()[1]
+
+            if len(year)==2:
+                section = list(year)[1]
+                year = list(year)[0]
+            else:
+                section = year
+
+            semester_str = str(sem_sy).split(",")[0].lower()
+            sy = str(sem_sy).split(",")[1].strip()
+
+            if semester_str.startswith("first"):
+                real_sem = 1
+            elif semester_str.startswith("second"):
+                real_sem = 2
+            else:
+                real_sem = 3
+
+
+            # course_obj = Course.objects.get(name=course)
+            
+            subject_obj = Subject.objects.get(
+                description = subject_description.strip()
+            )
+
+            for row in sheet.iter_rows(min_row=9, values_only=True):
+                if not row[1]:
+                    continue
+                student_id = str(row[1]).strip()
+                print(student_id,end=" ")
+
+                try:
+                    student_obj = Student.objects.get(
+                        student_id=student_id
+                    )
+                    print(student_obj.name,end="--")
+                    
+                    enrollment_obj = Enrollment.objects.get(
+                        student=student_obj,
+                        school_year=sy,
+                        semester=real_sem,
+                        year_level= int(year),
+                        section=section
+                    )
+
+                    print(enrollment_obj.student.name,end="---")
+
+                    # Link subject to enrollment
+                    es_object = EnrollmentSubject.objects.get(
+                        enrollment=enrollment_obj,
+                        subject=subject_obj
+                    )
+                    mid_grade = row[2]
+                    final_grade = row[3]
+                    print(mid_grade)
+                    print(final_grade)
+
+                    try:
+                        es_object.midterm_grade = float(mid_grade)
+                        es_object.final_grade = float(final_grade)
+                        es_object.save()
+                    except:
+                        continue
+                    print("\n\nSucessful!\n\n")
+                except:
+                    pass
+
+            return redirect("grade_list")
+
+    return redirect("grade_list")
+
+
+
 def upload_excel(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -228,6 +315,52 @@ def student_list(request):
         'student_count': students.count()
     })
 
+
+@login_required
+def grade_list(request):
+    school_year = request.GET.get('school_year')
+    semester = request.GET.get('semester')
+    year_level = request.GET.get('year_level')
+    subject_id = request.GET.get('subject')
+
+    # Get all students through their enrollments
+    students = Student.objects.all()
+
+    if school_year or semester or year_level or subject_id:
+        enrollments = Enrollment.objects.all()
+        
+        if school_year:
+            enrollments = enrollments.filter(school_year=school_year)
+        if semester:
+            enrollments = enrollments.filter(semester=semester)
+        if year_level:
+            enrollments = enrollments.filter(year_level=year_level)
+        if subject_id:
+            enrollments = enrollments.filter(
+                enrollmentsubject__subject__id=subject_id
+            )
+        
+        students = Student.objects.filter(enrollments__in=enrollments).distinct()
+
+    # Get all school years for dropdown
+    school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
+    subjects = Subject.objects.all()
+
+    form = UploadFileForm()
+    return render(request, 'IMS_app/grade_list.html', {
+        'students': students,
+        'form': form,
+        'semesters': [1, 2, 3],
+        'year_levels': [1, 2, 3, 4],
+        'school_years': school_years,
+        'subjects': subjects,
+        'selected_year': school_year,
+        'selected_semester': semester,
+        'selected_year_level': year_level,
+        'selected_subject': subject_id,
+        'student_count': students.count()
+    })
+
 @login_required
 def faculty_list(request):
     faculties = Faculty.objects.all()
@@ -324,23 +457,16 @@ def logoutView(req):
 
 def update_grades(req, pk):
     student = get_object_or_404(Student, pk=pk)
-    subjects = Subject.objects.all()
-    # Get all grades related to this student
-    grades = Grade.objects.filter(student=student).select_related('subject')
+
+    es = []
+    for enrollment in student.enrollments.all():
+        print(f"\n{enrollment.school_year} - Semester {enrollment.semester}")
+        
+        enrollment_subjects = EnrollmentSubject.objects.filter(enrollment=enrollment)
+        es.extend(enrollment_subjects)
+
     
     return render(req, 'IMS_app/grades.html', {
         'student': student,
-        'grades': grades,
-        'subjects':subjects
+        'es_objs':enrollment_subjects
     })
-    
-def add_grade(request, pk):
-    if request.method == 'POST':
-        student = get_object_or_404(Student,pk=pk)
-        Grade.objects.create(
-            student = student, 
-            subject = Subject.objects.get(id=request.POST.get("course")),
-            mid = float(request.POST.get("mid")),
-            finals = float(request.POST.get("finals")),
-                    )
-        return redirect("student_list")

@@ -32,7 +32,7 @@ class Student(models.Model):
 
 class Subject(models.Model):
     code = models.CharField(max_length=10, unique=True)   
-    description = models.TextField(blank=True)
+    description = models.CharField(max_length=500, unique=True)
 
     #instructors = connected to Faculty many to many because there could be multiple faculty teaching one subject
     instructors = models.ManyToManyField('Faculty', related_name='subjects')
@@ -76,6 +76,13 @@ class EnrollmentSubject(models.Model):
 
     class Meta:
         unique_together = ('enrollment', 'subject')
+
+    @property
+    def average(self):
+        average = 0
+        if self.midterm_grade is not None and self.final_grade is not None:
+            average = round((self.midterm_grade + self.final_grade)/2,2)
+        return average
 
     def __str__(self):
         average = None
