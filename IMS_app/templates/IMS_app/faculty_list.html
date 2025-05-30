@@ -2,34 +2,6 @@
 
 <h1 style="color: #333; margin-bottom: 1em">Faculty</h1>
 
-<div id="wrapper" class="modal-wrapper" style="display: none">
-  <div id="attendanceModal" class="file-upload-content">
-    <span id="closeModalBtn" class="close">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="30px"
-        viewBox="0 -960 960 960"
-        width="30px"
-        fill="#333  "
-      >
-        <path
-          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-        />
-      </svg>
-    </span>
-    <h2>Upload File</h2>
-    <form
-      method="post"
-      enctype="multipart/form-data"
-      class="form-container"
-      action="{% url 'upload_faculty' %}"
-    >
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit"><span>UPLOAD</span></button>
-    </form>
-  </div>
-</div>
-
 <div class="menu-2-container">
   <div class="menu-2">
     <button
@@ -48,39 +20,20 @@
         />
       </svg>
     </button>
-    <button id="openModalBtn">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 -960 960 960"
-        width="24px"
-        fill="#F3F3F3"
-      >
-        <path
-          d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640H447l-80-80H160v480l96-320h684L837-217q-8 26-29.5 41.5T760-160H160Zm84-80h516l72-240H316l-72 240Zm0 0 72-240-72 240Zm-84-400v-80 80Z"
-        />
-      </svg>
-    </button>
   </div>
 </div>
 
 <table id="students" class="table">
   <thead>
     <tr>
-      <th data-title="Employee ID">Employee ID</th>
       <th data-title="Name">Name</th>
-      <th data-title="Gender">Gender</th>
-      <th data-title="Email">Email</th>
       <th data-title="Actions">Actions</th>
     </tr>
   </thead>
   <tbody>
     {% for faculty in faculties %}
     <tr>
-      <td data-title="Employee ID">{{ faculty.employee_id }}</td>
       <td data-title="Name">{{ faculty.name }}</td>
-      <td data-title="Gender">{{ faculty.gender }}</td>
-      <td data-title="Email">{{ faculty.email }}</td>
       <td data-title="Actions">
         <div class="action-button-container">
           <button
@@ -112,22 +65,6 @@
             >
               <path
                 d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
-              />
-            </svg>
-          </button>
-          <button
-            class="others-button"
-            onclick="window.location.href='{% url 'faculty_info' faculty.pk %}'"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              fill="#F3F3F3"
-            >
-              <path
-                d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"
               />
             </svg>
           </button>

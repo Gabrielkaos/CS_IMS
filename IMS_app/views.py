@@ -6,150 +6,60 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import json
 import openpyxl
-import os
 
-
-def get_provinces():
-    # Load provinces from the local JSON file
-    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/provinces.json')
-    with open(file_path, 'r') as file:
-        provinces = json.load(file)
-
-    # Sort provinces alphabetically by the name
-    provinces = sorted(provinces, key=lambda x: x['name'])
-    return provinces
-
-def get_province_code(name):
-    if not name:
-        return ""
-    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/provinces.json')
-    with open(file_path, 'r') as file:
-        provinces = json.load(file)
-    for province in provinces:
-        if province.get("name", "").lower() == name.lower():
-            return province.get("code", "")
-    return ""
-
-def get_city_code(name):
-    if not name:
-        return ""
-    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/cities-municipalities.json')
-    with open(file_path, 'r') as file:
-        cities = json.load(file)
-    for city in cities:
-        if city.get("name", "").lower() == name.lower():
-            return city.get("code", "")
-    return ""
-
-def get_barangay_code(name):
-    if not name:
-        return ""
-    file_path = os.path.join(os.path.dirname(__file__),'static/IMS_app', 'api/barangays.json')
-    with open(file_path, 'r') as file:
-        barangays = json.load(file)
-    for barangay in barangays:
-        if barangay.get("name", "").lower() == name.lower():
-            return barangay.get("code", "")
-    return ""
-
-
-def upload_faculty(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            excel_file = request.FILES['files']
-            wb = openpyxl.load_workbook(excel_file)
-            sheet = wb.active
-
-            for row in sheet.iter_rows(min_row=2, values_only=True):
-                if None in list(row):
-                    continue
-                first_name, middle_name, last_name, employee_id, email, date_of_birth,gender,phone_number, current_province, \
-                    current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
-                emergency_contact_phone, emergency_contact_relation = row
-                try:
-                    Faculty.objects.create(
-                        first_name=first_name,
-                        middle_name=middle_name,
-                        last_name=last_name,
-                        employee_id=employee_id,
-                        email=email,
-                        date_of_birth=date_of_birth,
-                        gender=gender[0].upper(),
-                        phone_number=phone_number,
-                        current_province_code=get_province_code(current_province.title()),
-                        current_city_code=get_city_code(current_city.title()),
-                        current_barangay_code=get_barangay_code(current_barangay.title()),
-    
-                        permanent_province_code=get_province_code(permanent_province.title()),
-                        permanent_city_code=get_city_code(permanent_city.title()),
-                        permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
-                        emergency_contact_name=emergency_contact_name.title(),
-                        emergency_contact_phone=emergency_contact_phone,
-                        emergency_contact_relation=emergency_contact_relation[0].upper()
-                    )
-                except:
-                    continue
-            messages.success(request, "Excel file uploaded successfully!")
-            return redirect('faculty_list')
-    else:
-        form = UploadFileForm(request.POST, request.FILES)
-        # print("Hello the/re 2")
-    return redirect('faculty_list')
-
+sections = "1A,1B,1C,2A,2B,2C,3A,3B,3C,4A,4B,4C,1,2,3,4".split(",")
 
 def upload_excel(request):
     if request.method == 'POST':
-        print("Hello there")
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            # excel_file = request.FILES['excel_file']
-            # df = pd.read_excel(excel_file)
             excel_file = request.FILES['files']
-            # df = pd.read_excel(excel_file)
             wb = openpyxl.load_workbook(excel_file)
             sheet = wb.active
 
-            for row in sheet.iter_rows(min_row=2, values_only=True):
-                first_name, middle_name, last_name, student_id, year_level, status, email, date_of_birth,gender,phone_number, current_province, current_city, current_barangay, permanent_province, permanent_city, permanent_barangay, emergency_contact_name,\
-                emergency_contact_phone, emergency_contact_relation, course = row
-                if None in list(row):
+            # Extract metadata
+            course_and_section = sheet['C7'].value
+            section = str(course_and_section).split()[1]
+            code = sheet['C8'].value
+            subject_description = sheet['C9'].value
+            instructor_name = sheet['C10'].value
+
+            # Get or create Course
+            course_obj, _ = Course.objects.get_or_create(name=str(course_and_section).split()[0])
+
+            # Get or create Subject
+            subject_obj, _ = Subject.objects.get_or_create(
+                code=code,
+                defaults={'description': subject_description}
+            )
+
+            # Get or create Faculty
+            faculty_obj, _ = Faculty.objects.get_or_create(name=instructor_name)
+
+            # You can add M2M linking here if needed:
+            subject_obj.instructors.add(faculty_obj)
+
+            # Iterate through students starting from row 12
+            for row in sheet.iter_rows(min_row=12, values_only=True):
+                if not row[1] or not row[2]:
                     continue
-                try:
-                    Student.objects.create(
-                        first_name=first_name,
-                        middle_name=middle_name,
-                        last_name=last_name,
-                        student_id=student_id,
-                        year_level=year_level,
-                        status=status,
-                        email=email,
-                        date_of_birth=date_of_birth,
-                        course=Course.objects.get(name=course.upper()),
-                        gender=gender[0].upper(),
-                        phone_number=phone_number,
-                        current_province_code=get_province_code(current_province.title()),
-                        current_city_code=get_city_code(current_city.title()),
-                        current_barangay_code=get_barangay_code(current_barangay.title()),
-    
-                        permanent_province_code=get_province_code(permanent_province.title()),
-                        permanent_city_code=get_city_code(permanent_city.title()),
-                        permanent_barangay_code=get_barangay_code(permanent_barangay.title()),
-                        emergency_contact_name=emergency_contact_name.title(),
-                        emergency_contact_phone=emergency_contact_phone,
-                        emergency_contact_relation=emergency_contact_relation[0].upper()
-                    )
-                except:
-                    continue
-            messages.success(request, "Excel file uploaded successfully!")
-            return redirect('student_list')
-                
-    else:
-        form = UploadFileForm(request.POST, request.FILES)
-        # print("Hello the/re 2")
-    return redirect('student_list')
+                student_id = str(row[1]).strip()
+                name = row[2].strip()
+
+                if student_id.startswith("---"):continue
+
+                student_obj, _ = Student.objects.get_or_create(
+                    student_id=student_id,
+                    course = course_obj,
+                    year_level = int(list(section)[0]),
+                    defaults={'name': name, 'section': section}
+                )
+                student_obj.subjects.add(subject_obj)
+
+            return redirect("student_list")
+        form = UploadFileForm()
+    return redirect("student_list")
 
 # Accounts
 def register(request):
@@ -207,39 +117,13 @@ def loginView(request):
 def dashboard(request):
     total_students = Student.objects.count()
 
-    # Gender distribution
-    gender_counts = Student.objects.values('gender').annotate(count=Count('gender'))
-    gender_data = {
-        'Male': 0,
-        'Female': 0,
-        'Other': 0,
-        'Unspecified': 0
-    }
-    for item in gender_counts:
-        key = dict(Student.GENDER_CHOICES).get(item['gender'], 'Unspecified')
-        gender_data[key] = item['count']
 
     # Students per year level
     year_level_data = Student.objects.values('year_level').annotate(count=Count('year_level')).order_by('year_level')
 
-    # Age statistics
-    from datetime import date
-    def calculate_age(dob):
-        today = date.today()
-        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-
-    ages = [calculate_age(student.date_of_birth) for student in Student.objects.all() if student.date_of_birth]
-    average_age = sum(ages) / len(ages) if ages else 0
-    min_age = min(ages) if ages else 0
-    max_age = max(ages) if ages else 0
-
     context = {
         'total_students': total_students,
-        'gender_data': gender_data,
-        'year_level_data': year_level_data,
-        'average_age': round(average_age, 1),
-        'min_age': min_age,
-        'max_age': max_age,
+        'year_level_data': year_level_data
     }
 
     return render(request, 'IMS_app/dashboard.html', context)
@@ -276,23 +160,25 @@ def subject_list(request):
 
 @login_required
 def student_create(request):
-    provinces = get_provinces()
     coursies = Course.objects.all()
-    print("Hello")
+    print("create")
     if request.method == 'POST':
-        print("POST")
-        form = StudentForm(request.POST, provinces=provinces)
+        form = StudentForm(request.POST)
+        print("post")
         if form.is_valid():
-            print("Valid")
+            print("valid")
             form1 = form.save(commit=False)
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
+            form1.section = request.POST["section"]
+            form1.year_level = int(list(request.POST["section"])[0])
+            print("saved")
             form1.save()
             return redirect('student_list')
     else:
         print("Not POST")
-        form = StudentForm(provinces=provinces)
-    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces,'coursies': coursies})
+        form = StudentForm()
+    return render(request, 'IMS_app/student_form.html', {'form': form,'coursies': coursies, 'sections':sections})
 
 @login_required
 def subject_create(request):
@@ -347,10 +233,10 @@ def faculty_create(request):
 @login_required
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
-    provinces = get_provinces()
     coursies = Course.objects.all()
+    
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student, provinces=provinces)
+        form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             print("Form valid student update")
             form1 = form.save()
@@ -358,11 +244,14 @@ def student_update(request, pk):
             course = Course.objects.get(id=request.POST["course"])
             form1.course = course
 
+            form1.section = request.POST["section"]
+            form1.year_level = int(list(request.POST["section"])[0])
+
             form1.save()
             return redirect('student_list')
     else:
-        form = StudentForm(instance=student, provinces=provinces)
-    return render(request, 'IMS_app/student_form.html', {'form': form, 'provinces': provinces,'coursies':coursies})
+        form = StudentForm(instance=student)
+    return render(request, 'IMS_app/student_form.html', {'form': form,'coursies':coursies, "student":student, "sections":sections})
 
 @login_required
 def faculty_update(request, pk):

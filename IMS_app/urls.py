@@ -18,7 +18,7 @@ from django.urls import path
 from .views import register, dashboard,  upload_excel, \
     student_list, student_create, student_update, student_delete, student_info, logoutView, \
     loginView, faculty_list, faculty_update, faculty_create, faculty_delete, faculty_info,\
-    upload_faculty,subject_list, subject_create, subject_update, subject_delete, subject_info, \
+        subject_list, subject_create, subject_update, subject_delete, subject_info, \
     course_list, update_grades, add_grade
 
 urlpatterns = [
@@ -41,7 +41,6 @@ urlpatterns = [
 
 
     #faculty
-    path('upload-faculty/', upload_faculty, name='upload_faculty'),
     path('show_faculty/', faculty_list, name='faculty_list'),
     path('faculty_update/<int:pk>/', faculty_update, name='faculty_update'),
     path('faculty_create/', faculty_create, name='faculty_create'),

@@ -9,16 +9,20 @@
         <h2>{{ student.first_name }}'s Full Details</h2>
       </div>
       <div class="form-group">
-        <label>First Name</label>
-        <input type="text" value="{{ student.first_name }}" readonly />
+        <label>Name</label>
+        <input type="text" value="{{ student.name }}" readonly />
       </div>
       <div class="form-group">
-        <label>Middle Name</label>
-        <input type="text" value="{{ student.middle_name }}" readonly />
+          <label>Year Level</label>
+          <input type="text" value="{{ student.year_level }}" readonly />
       </div>
       <div class="form-group">
-        <label>Last Name</label>
-        <input type="text" value="{{ student.last_name }}" readonly />
+          <label>Section</label>
+          <input type="text" value="{{ student.section }}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Course</label>
+        <input type="text" value="{{ student.course }}" readonly />
       </div>
       <div class="form-group">
         <label>Student ID</label>
@@ -26,43 +30,7 @@
       </div>
     </div>
 
-    <div class="container" style="grid-area: box2">
-      <div class="form-group">
-        <label>Course</label>
-        <input type="text" value="{{ student.course.name }}" readonly />
-      </div>
-      <div class="form-group">
-        <label>Year Level</label>
-        <input
-          type="text"
-          value="{{ student.get_year_level_display }}"
-          readonly
-        />
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <input type="text" value="{{ student.status }}" readonly />
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" value="{{ student.email }}" readonly />
-      </div>
-      <div class="form-group">
-        <label>Date of Birth</label>
-        <input type="text" value="{{ student.date_of_birth }}" readonly />
-      </div>
-      <div class="form-group">
-        <label>Gender</label>
-        <input type="text" value="{{ student.get_gender_display }}" readonly />
-      </div>
-    </div>
 
-    <div class="container" style="grid-area: box3">
-      <div class="header"></div>
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="text" value="{{ student.phone_number }}" readonly />
-      </div>
       <!-- <div class="form-group">
         <label>Current Address</label>
         <textarea class="address-input" readonly>
@@ -75,7 +43,7 @@
   {{ student.permanent_address }}</textarea
         >
       </div>-->
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Emergency Contact Name</label>
         <input
           type="text"
@@ -99,11 +67,8 @@
           readonly
         />
       </div>
-    </div>
+    </div> -->
 
-    <div class="container" style="grid-area: box4">
-      
-    </div>
   </form>
 
 {% endblock content %}
