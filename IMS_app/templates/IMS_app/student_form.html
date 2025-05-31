@@ -18,14 +18,6 @@
             <label for="id_student_id">Student ID</label>
             {{ form.student_id }}
 
-
-            <label for="course">Select Course</label>
-            <select required name="course" id="course">
-                {% for course in coursies %}
-                    <option value="{{ course.id }}" {% if student.course.id == course.id %}selected{% endif %}>{{ course.name }}</option>
-                {% endfor %}
-            </select>
-
                 
         </div>
 

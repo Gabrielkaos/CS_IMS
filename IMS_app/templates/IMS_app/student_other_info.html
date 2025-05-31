@@ -1,67 +1,80 @@
-{% extends "IMS_app/base.html" %} {% load static %} {% block content %}
+{% extends "IMS_app/base.html" %}
+{% load static %}
+{% block content %}
 
-  <form class="other-student-form-container">
-    <div class="container" style="grid-area: box1">
-      <div class="header">
-        <button class="back-button" type="button" onclick="window.location.href='{% url 'student_list' %}'">
-            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
-        </button>
-        <h2>{{ student.first_name }}'s Full Details</h2>
-      </div>
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" value="{{ student.name }}" readonly />
-      </div>
+<div class="header">
+    <button type="button" class="back-button" onclick="window.location.href='{% url 'student_list' %}'">
+        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+    </button>
+</div>
 
-      <div class="form-group">
-        <label>Course</label>
-        <input type="text" value="{{ student.course }}" readonly />
-      </div>
-      <div class="form-group">
-        <label>Student ID</label>
-        <input type="text" value="{{ student.student_id }}" readonly />
-      </div>
-    </div>
+<form method="get" style="margin-bottom: 1em;">
+  <label for="school_year">School Year:</label>
+  <select name="school_year" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for year in school_years %}
+      <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+  </select>
 
+  <label for="semester">Semester:</label>
+  <select name="semester" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for sem in semesters %}
+      <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
+        {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
+      </option>
+    {% endfor %}
+  </select>
 
-      <!-- <div class="form-group">
-        <label>Current Address</label>
-        <textarea class="address-input" readonly>
-  {{ student.current_address }}</textarea
-        >
-      </div>
-      <div class="form-group">
-        <label>Permanent Address</label>
-        <textarea class="address-input" readonly>
-  {{ student.permanent_address }}</textarea
-        >
-      </div>-->
-      <!-- <div class="form-group">
-        <label>Emergency Contact Name</label>
-        <input
-          type="text"
-          value="{{ student.emergency_contact_name }}"
-          readonly
-        />
-      </div>
-      <div class="form-group">
-        <label>Emergency Contact Phone</label>
-        <input
-          type="text"
-          value="{{ student.emergency_contact_phone }}"
-          readonly
-        />
-      </div>
-      <div class="form-group">
-        <label>Emergency Contact Relation</label>
-        <input
-          type="text"
-          value="{{ student.get_emergency_contact_relation_display }}"
-          readonly
-        />
-      </div>
-    </div> -->
+  <label for="year_level">Year Level:</label>
+  <select name="year_level" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for y in year_levels %}
+      <option value="{{ y }}" {% if selected_year_level == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+    {% endfor %}
+  </select>
+</form>
 
-  </form>
+<div class="student-info">
+  <h2>{{ student.name }} ({{ student.student_id }})</h2>
+  <p style="color: black;"><strong>Course:</strong> {{ student.course }}</p>
+</div>
 
-{% endblock content %}
+<hr>
+
+{% for enrollment, subjects in enrollments.items %}
+  <h3>{{ enrollment.school_year }} - {{ enrollment.semester }} Semester - Year {{ enrollment.year_level }}</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Subject Code</th>
+        <th>Description</th>
+        <th>Midterm Grade</th>
+        <th>Final Grade</th>
+        <th>Average</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for es in subjects %}
+        <tr>
+          <td>{{ es.subject.code }}</td>
+          <td>{{ es.subject.description }}</td>
+          <td>{{ es.midterm_grade }}</td>
+          <td>{{ es.final_grade }}</td>
+          <td>
+            {% if es.midterm_grade and es.final_grade %}
+              {{ es.average }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% empty %}
+  <p>No enrollment data found for this student.</p>
+{% endfor %}
+
+{% endblock %}

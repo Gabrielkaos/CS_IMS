@@ -255,8 +255,42 @@ def dashboard(request):
 
 def student_info(request, pk):
     student = get_object_or_404(Student, pk=pk)
-    # print('Student!!!!!!!!!!!!!:',student)
-    return render(request, 'IMS_app/student_other_info.html', {'student': student})
+    # Filters from the GET parameters
+    selected_year = request.GET.get('school_year')
+    selected_sem = request.GET.get('semester')
+    selected_ylvl = request.GET.get('year_level')
+
+    enrollments = student.enrollments.all().order_by('-school_year', '-semester')
+
+    if selected_year:
+        enrollments = enrollments.filter(school_year=selected_year)
+    if selected_sem:
+        enrollments = enrollments.filter(semester=selected_sem)
+    if selected_ylvl:
+        enrollments = enrollments.filter(year_level=selected_ylvl)
+
+    # Get all school years, semesters, and year levels to populate the dropdowns
+    school_years = student.enrollments.values_list('school_year', flat=True).distinct()
+    semesters = student.enrollments.values_list('semester', flat=True).distinct()
+    year_levels = student.enrollments.values_list('year_level', flat=True).distinct()
+
+    enrollment_subjects = {}
+    for enrollment in enrollments:
+        subjects = EnrollmentSubject.objects.filter(enrollment=enrollment).select_related('subject')
+        enrollment_subjects[enrollment] = subjects
+
+    context = {
+        'student': student,
+        'enrollments': enrollment_subjects,
+        'school_years': school_years,
+        'semesters': semesters,
+        'year_levels': year_levels,
+        'selected_year': selected_year,
+        'selected_semester': selected_sem,
+        'selected_year_level': selected_ylvl,
+    }
+
+    return render(request, 'IMS_app/student_other_info.html', context)
 
 def faculty_info(request, pk):
     faculty = get_object_or_404(Faculty, pk=pk)
@@ -276,11 +310,12 @@ def student_list(request):
     semester = request.GET.get('semester')
     year_level = request.GET.get('year_level')
     subject_id = request.GET.get('subject')
+    course_id = request.GET.get('course')
 
     # Get all students through their enrollments
     students = Student.objects.all()
 
-    if school_year or semester or year_level or subject_id:
+    if school_year or semester or year_level or subject_id or course_id:
         enrollments = Enrollment.objects.all()
         
         if school_year:
@@ -294,8 +329,12 @@ def student_list(request):
                 enrollmentsubject__subject__id=subject_id
             )
         
-        students = Student.objects.filter(enrollments__in=enrollments).distinct()
-
+        
+        if course_id:
+            course_obj = Course.objects.get(id=int(course_id))
+            students = Student.objects.filter(enrollments__in=enrollments,course=course_obj).distinct()
+        else:
+            students = Student.objects.filter(enrollments__in=enrollments).distinct()
     # Get all school years for dropdown
     school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
     subjects = Subject.objects.all()
@@ -312,7 +351,9 @@ def student_list(request):
         'selected_semester': semester,
         'selected_year_level': year_level,
         'selected_subject': subject_id,
-        'student_count': students.count()
+        'student_count': students.count(),
+        "courses":Course.objects.all(),
+        "selected_course":course_id
     })
 
 
@@ -322,11 +363,13 @@ def grade_list(request):
     semester = request.GET.get('semester')
     year_level = request.GET.get('year_level')
     subject_id = request.GET.get('subject')
+    course_id = request.GET.get('course')
+
 
     # Get all students through their enrollments
     students = Student.objects.all()
 
-    if school_year or semester or year_level or subject_id:
+    if school_year or semester or year_level or subject_id or course_id:
         enrollments = Enrollment.objects.all()
         
         if school_year:
@@ -340,7 +383,11 @@ def grade_list(request):
                 enrollmentsubject__subject__id=subject_id
             )
         
-        students = Student.objects.filter(enrollments__in=enrollments).distinct()
+        if course_id:
+            course_obj = Course.objects.get(id=int(course_id))
+            students = Student.objects.filter(enrollments__in=enrollments,course=course_obj).distinct()
+        else:
+            students = Student.objects.filter(enrollments__in=enrollments).distinct()
 
     # Get all school years for dropdown
     school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
@@ -358,8 +405,48 @@ def grade_list(request):
         'selected_semester': semester,
         'selected_year_level': year_level,
         'selected_subject': subject_id,
-        'student_count': students.count()
+        'student_count': students.count(),
+        "courses":Course.objects.all(),
+        "selected_course":course_id
     })
+
+def update_grades(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+
+    # Get filter params from GET
+    school_year = request.GET.get('school_year')
+    semester = request.GET.get('semester')
+    subject_id = request.GET.get('subject')
+
+    # For filter options
+    school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
+    subjects = Subject.objects.all()
+    semesters = [1, 2, 3]
+
+    # Start with all enrollment subjects related to the student
+    es_objs = EnrollmentSubject.objects.filter(enrollment__student=student)
+
+    # Apply filters if specified
+    if school_year:
+        es_objs = es_objs.filter(enrollment__school_year=school_year)
+
+    if semester:
+        es_objs = es_objs.filter(enrollment__semester=int(semester))
+
+    if subject_id:
+        es_objs = es_objs.filter(subject__id=int(subject_id))
+
+    return render(request, 'IMS_app/grades.html', {
+        'student': student,
+        'es_objs': es_objs,  # All matching enrollment-subjects
+        'selected_year': school_year,
+        'selected_semester': semester,
+        'selected_subject': subject_id,
+        'school_years': school_years,
+        'subjects': subjects,
+        'semesters': semesters,
+    })
+
 
 @login_required
 def faculty_list(request):
@@ -455,18 +542,3 @@ def logoutView(req):
     return redirect("login")
 
 
-def update_grades(req, pk):
-    student = get_object_or_404(Student, pk=pk)
-
-    es = []
-    for enrollment in student.enrollments.all():
-        print(f"\n{enrollment.school_year} - Semester {enrollment.semester}")
-        
-        enrollment_subjects = EnrollmentSubject.objects.filter(enrollment=enrollment)
-        es.extend(enrollment_subjects)
-
-    
-    return render(req, 'IMS_app/grades.html', {
-        'student': student,
-        'es_objs':enrollment_subjects
-    })

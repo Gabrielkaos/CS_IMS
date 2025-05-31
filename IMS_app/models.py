@@ -78,6 +78,19 @@ class EnrollmentSubject(models.Model):
         unique_together = ('enrollment', 'subject')
 
     @property
+    def remarks(self):
+        average = 0
+        if self.midterm_grade is not None and self.final_grade is not None:
+            average = round((self.midterm_grade + self.final_grade)/2,2)
+        
+
+        if average:
+            if average > 3.0:return "Failed"
+            else:return "Passed"
+        
+        return "Dropped"
+
+    @property
     def average(self):
         average = 0
         if self.midterm_grade is not None and self.final_grade is not None:

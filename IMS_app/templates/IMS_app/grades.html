@@ -3,20 +3,57 @@
 {% load static %} 
 {% block content %}
 <div class="header">
-      <button class="back-button" type="button" onclick="window.location.href='{% url 'student_list' %}'">
+      <button class="back-button" type="button" onclick="window.location.href='{% url 'grade_list' %}'">
           <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
       </button>
       <h2 style="color: #333; margin-bottom: 1em">Grades</h2>
 </div>
+<br>
+<br>
+<div class="student-info">
+  <h2>{{ student.name }} ({{ student.student_id }})</h2>
+  <p style="color: black;"><strong>Course:</strong> {{ student.course }}</p>
+</div>
 
+<form method="get" style="margin-bottom: 1em;">
+  <label for="school_year">School Year:</label>
+  <select name="school_year" id="school_year" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for year in school_years %}
+      <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+    {% endfor %}
+  </select>
 
+  <label for="semester">Semester:</label>
+  <select name="semester" id="semester" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for sem in semesters %}
+      <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
+        {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
+      </option>
+    {% endfor %}
+  </select>
+
+  <label for="subject">Subject:</label>
+  <select name="subject" id="subject" onchange="this.form.submit()">
+    <option value="">All</option>
+    {% for subject in subjects %}
+      <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+        {{ subject.code }} - {{ subject.description }}
+      </option>
+    {% endfor %}
+  </select>
+
+</form>
 <table id="students" class="table">
     <thead>
         <tr>
-            <th>Subjects</th>
-            <th>Midterms</th>
-            <th>Finals</th>
-            <th>Average</th>
+            <th data-title="Year Level">Year Level</th>
+            <th data-title="Subjects">Subjects</th>
+            <th data-title="Midterms">Midterms</th>
+            <th data-title="Finals">Finals</th>
+            <th data-title="Average">Average</th>
+            <th data-title="Remarks">Remarks</th>
         </tr>
         
     </thead>
@@ -24,10 +61,12 @@
         
         {% for es in es_objs %}
         <tr>
-            <td>{{ es.subject }}</td>
-            <td>{{ es.midterm_grade }}</td>
-            <td>{{ es.final_grade }}</td>
-            <td>{{ es.average }}</td>
+            <td data-title="Year Level">{{ es.enrollment.year_level }}</td>
+            <td data-title="Subjects">{{ es.subject }}</td>
+            <td data-title="Midterms">{{ es.midterm_grade }}</td>
+            <td data-title="Finals">{{ es.final_grade }}</td>
+            <td data-title="Average">{{ es.average }}</td>
+            <td data-title="Remarks">{{ es.remarks }}</td>
         </tr>
     {% endfor %}
     
