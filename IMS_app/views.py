@@ -1,13 +1,31 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student, Faculty, Subject, Course, Grade, Enrollment,EnrollmentSubject
 from django.contrib.auth import authenticate, login, logout
-from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm
+from .forms import StudentForm, UploadFileForm, FacultyForm, SubjectForm, AdminCreationForm
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import openpyxl
 from django.db.models import Q
+from django.contrib.auth.decorators import user_passes_test
+
+def is_superuser(user):
+    return user.is_superuser
+
+@user_passes_test(is_superuser)
+def add_admin_view(request):
+    if request.method == 'POST':
+        form = AdminCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'New admin created successfully.')
+            return redirect('add_admin')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = AdminCreationForm()
+    return render(request, 'IMS_app/add_admin.html', {'form': form})
 
 
 def upload_grades(request):

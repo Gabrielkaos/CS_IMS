@@ -1,5 +1,21 @@
 from django import forms
 from .models import Student, Faculty, Subject, Course, Grade
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
+class AdminCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email")  # You can add more fields if needed
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True
+        user.is_superuser = True
+        if commit:
+            user.save()
+        return user
 
 class SubjectForm(forms.ModelForm):
     class Meta:

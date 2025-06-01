@@ -1,0 +1,31 @@
+/* static/IMS_app/css/form.css */
+.form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.form-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+.form-container input,
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.form-container button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.form-container button:hover {
+  background: #0056b3;
+}
