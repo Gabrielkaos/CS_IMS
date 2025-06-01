@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import openpyxl
+from django.db.models import Q
 
 
 def upload_grades(request):
@@ -222,36 +223,78 @@ def loginView(request):
 
 
 @login_required
+
 def dashboard(request):
-    total_students = Student.objects.count()
+    # Get selected filters from GET parameters
+    selected_sy = request.GET.get('sy')
+    selected_sem = request.GET.get('sem')
+
+    # Default to most recent if not provided
+    if not selected_sy:
+        selected_sy = Enrollment.objects.order_by('-school_year').values_list('school_year', flat=True).first()
+    if not selected_sem:
+        selected_sem = Enrollment.objects.order_by('-semester').values_list('semester', flat=True).first()
+
+    try:
+        selected_sem = int(selected_sem)
+    except (TypeError, ValueError):
+        selected_sem = 1  # default fallback
+
+    # Get all school years (for dropdown)
+    all_school_years = Enrollment.objects.values_list('school_year', flat=True).distinct().order_by('-school_year')
+
+    # Filtered enrollments
+    filtered_enrollments = Enrollment.objects.filter(school_year=selected_sy, semester=selected_sem)
+
+    total_students = filtered_enrollments.values('student').distinct().count()
     total_subjects = Subject.objects.count()
     total_faculty = Faculty.objects.count()
-    total_enrollments = Enrollment.objects.count()
+    total_enrollments = filtered_enrollments.count()
 
-    current_sy = Enrollment.objects.order_by('-school_year').values_list('school_year', flat=True).first()
-    current_sem = Enrollment.objects.order_by('-semester').values_list('semester', flat=True).first()
-
-    # Students per subject (top 5)
-    top_subjects = Subject.objects.annotate(student_count=Count('enrollmentsubject__enrollment__student')) \
-                                  .order_by('-student_count')[:5]
+    # Top subjects (within filtered enrollments)
+    top_subjects = (
+        Subject.objects
+        .annotate(
+            student_count=Count(
+                'enrollmentsubject__enrollment__student',
+                filter=Q(enrollmentsubject__enrollment__in=filtered_enrollments),
+                distinct=True
+            )
+        )
+        .order_by('-student_count')[:5]
+    )
 
     # Students per year level
-    year_level_data = Enrollment.objects.values('year_level').annotate(count=Count('student'))
+    year_level_data = (
+        filtered_enrollments
+        .values('year_level')
+        .annotate(count=Count('student'))
+        .order_by('year_level')
+    )
 
     # Students per course
-    course_data = Student.objects.values('course__name').annotate(count=Count('id')).order_by('-count')
+    course_data = (
+        filtered_enrollments
+        .values('student__course__name')
+        .annotate(count=Count('student'))
+        .order_by('-count')
+    )
 
     return render(request, 'IMS_app/dashboard.html', {
         'total_students': total_students,
         'total_subjects': total_subjects,
         'total_faculty': total_faculty,
         'total_enrollments': total_enrollments,
-        'current_sy': current_sy,
-        'current_sem': current_sem,
+        'current_sy': selected_sy,
+        'current_sem': selected_sem,
         'top_subjects': top_subjects,
         'year_level_data': year_level_data,
         'course_data': course_data,
+        'all_school_years': all_school_years,
+        'selected_sy': selected_sy,
+        'selected_sem': selected_sem,
     })
+
 
 def student_info(request, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -409,6 +452,27 @@ def grade_list(request):
         "courses":Course.objects.all(),
         "selected_course":course_id
     })
+
+def save_grades(request, pk):
+    if request.method == 'POST':
+        student = get_object_or_404(Student, pk=pk)
+        es_objs = EnrollmentSubject.objects.filter(enrollment__student=student)
+
+        for es in es_objs:
+            midterm_key = f"midterm_{es.pk}"
+            final_key = f"final_{es.pk}"
+            if midterm_key in request.POST and final_key in request.POST:
+                try:
+                    midterm = float(request.POST[midterm_key])
+                    final = float(request.POST[final_key])
+                except ValueError:
+                    continue
+
+                es.midterm_grade = midterm
+                es.final_grade = final
+                es.save()
+
+    return redirect('update_grades', pk=pk)
 
 def update_grades(request, pk):
     student = get_object_or_404(Student, pk=pk)

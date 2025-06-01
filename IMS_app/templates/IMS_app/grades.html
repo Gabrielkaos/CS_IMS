@@ -43,35 +43,47 @@
       </option>
     {% endfor %}
   </select>
-
 </form>
-<table id="students" class="table">
-    <thead>
-        <tr>
-            <th data-title="Year Level">Year Level</th>
-            <th data-title="Subjects">Subjects</th>
-            <th data-title="Midterms">Midterms</th>
-            <th data-title="Finals">Finals</th>
-            <th data-title="Average">Average</th>
-            <th data-title="Remarks">Remarks</th>
-        </tr>
-        
-    </thead>
-    <tbody>
-        
-        {% for es in es_objs %}
-        <tr>
-            <td data-title="Year Level">{{ es.enrollment.year_level }}</td>
-            <td data-title="Subjects">{{ es.subject }}</td>
-            <td data-title="Midterms">{{ es.midterm_grade }}</td>
-            <td data-title="Finals">{{ es.final_grade }}</td>
-            <td data-title="Average">{{ es.average }}</td>
-            <td data-title="Remarks">{{ es.remarks }}</td>
-        </tr>
-    {% endfor %}
-    
-    </tbody>
-</table>
+
+<button type="button" id="toggle-edit" class="edit-button">Edit Grades</button>
+<form method="post" action="{% url 'save_grades' student.pk %}" id="grades-form">
+  {% csrf_token %}
+  <table id="students" class="table">
+      <thead>
+          <tr>
+              <th data-title="Year Level">Year Level</th>
+              <th data-title="Subjects">Subjects</th>
+              <th data-title="Midterms">Midterms</th>
+              <th data-title="Finals">Finals</th>
+              <th data-title="Average">Average</th>
+              <th data-title="Remarks">Remarks</th>
+          </tr>
+          
+      </thead>
+      <tbody>
+          
+          {% for es in es_objs %}
+          <tr>
+              <td data-title="Year Level">{{ es.enrollment.year_level }}</td>
+              <td data-title="Subjects">{{ es.subject }}</td>
+              <td>
+                <span class="static-view">{{ es.midterm_grade }}</span>
+                <input type="number" name="midterm_{{ es.pk }}" value="{{ es.midterm_grade }}" step="0.01" min="0" max="100" class="edit-view hidden">
+              </td>
+              <td>
+                <span class="static-view">{{ es.final_grade }}</span>
+                <input type="number" name="final_{{ es.pk }}" value="{{ es.final_grade }}" step="0.01" min="0" max="100" class="edit-view hidden">
+              </td>
+              <!-- <td data-title="Midterms">{{ es.midterm_grade }}</td>
+              <td data-title="Finals">{{ es.final_grade }}</td> -->
+              <td data-title="Average">{{ es.average }}</td>
+              <td data-title="Remarks">{{ es.remarks }}</td>
+          </tr>
+      {% endfor %}
+      
+      </tbody>
+  </table>
+</form>
 
 <script>
   $(document).ready(function () {
@@ -80,4 +92,27 @@
 </script>
 {% load static %}
 <script src="{% static 'IMS_app/js/modal.js' %}"></script>
+<script>
+  document.getElementById("toggle-edit").addEventListener("click", function () {
+    const staticViews = document.querySelectorAll(".static-view");
+    const editViews = document.querySelectorAll(".edit-view");
+    const form = document.getElementById("grades-form");
+
+    staticViews.forEach(el => el.classList.toggle("hidden"));
+    editViews.forEach(el => el.classList.toggle("hidden"));
+
+    if (this.textContent === "Edit Grades") {
+      this.textContent = "Save Grades";
+    } else {
+      form.submit(); // Submit form if button is toggled back
+    }
+  });
+</script>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
 {% endblock %}
