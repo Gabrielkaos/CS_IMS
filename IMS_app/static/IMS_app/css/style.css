@@ -188,6 +188,7 @@ main p {
     padding: 20px 40px 20px 5px;
     border: 2px solid var(--third-color);
     border-radius: 16px;
+    overflow-y: auto;
 }
 
 .top-subjects-container:hover {
@@ -255,10 +256,7 @@ main p {
     padding: 20px 40px 20px 5px;
     border: 2px solid var(--third-color);
     border-radius: 16px;
-}
-
-.student-year-level-container table {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
 }
 
 .student-year-level-container h4 {
@@ -266,6 +264,11 @@ main p {
     font-size: 1.4em;
     color: var(--accent-color);
 }
+
+.student-year-level-container table {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
 
 .student-year-level-container:hover {
     transform: translateY(-10px);
@@ -277,12 +280,24 @@ main p {
     padding: 20px 40px 20px 5px;
     border: 2px solid var(--third-color);
     border-radius: 16px;
+    overflow-y: auto;
 }
 
+.top-subjects-container table,
+.student-year-level-container table,
 .student-per-course-container table {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    border-collapse: collapse;
 }
 
+
+.top-subjects-container thead th,
+.student-year-level-container thead th,
+.student-per-course-container thead th {
+    position: sticky; /* Optional: keep header visible */
+    top: 0;
+    z-index: 1;
+}
 
 .student-per-course-container h4 {
     margin-left: 20px;
@@ -583,6 +598,89 @@ main p {
 .age-stats-container span {
     width: 100%;
 } */
+
+/* <===== CREATE ADMIN ======> */
+
+.container {
+    margin: 0 15px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-admin-form-box {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.create-admin-form-box h1 {
+    font-size: 34px;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Input design */
+.create-admin-form-box input,
+.create-admin-form-box select  {
+    width: 100%;
+    padding: 12px;
+    background: #eee;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* log in button */
+.create-admin-form-box-form-box .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--third-color);
+    border-radius: 6px;
+    border: none;
+    cursor: #fff;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 20px;
+    transition: 0.5s;
+}
+
+.create-admin-form-box p,
+.create-admin-form-box ul {
+    color: rgb(243, 81, 81);
+}
+
+/* Create button */
+.create-admin-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--third-color);
+    border-radius: 6px;
+    border: none;
+    cursor: #fff;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 20px;
+    transition: 0.5s;
+}
+
+/* Hover effect */
+.create-admin-btn:hover {
+    background-color: var(--hover-color);
+    cursor: pointer;
+    transition: color 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+
 
 /* <===== ACTION BUTTONS =====> */
 .purple-button {

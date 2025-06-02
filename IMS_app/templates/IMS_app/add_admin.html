@@ -1,19 +1,20 @@
 {% extends 'IMS_app/base.html' %}
 {% block content %}
-  <div class="form-container">
+<div  class="container">
   <h2>Add New Admin</h2>
+
+  <form method="post" class="create-admin-form-box">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="create-admin-btn" type="submit">Create Admin</button>
+  </form>
 
   {% if messages %}
     {% for message in messages %}
-      <p style="color: green;">{{ message }}</p>
+      <p>{{ message }}</p>
     {% endfor %}
   {% endif %}
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Admin</button>
-  </form>
 </div>
 
 {% endblock %}
