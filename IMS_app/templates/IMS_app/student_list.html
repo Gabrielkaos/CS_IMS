@@ -50,6 +50,7 @@
 </div>
 
 <div class="filter-container">
+  
   <form method="get" style="margin-bottom: 1em;"  class="dropdown-filters">
     {% comment %} <label for="school_year">School Year:</label> {% endcomment %}
     <select name="school_year" id="school_year" onchange="this.form.submit()">
@@ -70,6 +71,21 @@
         </option>
       {% endfor %}
     </select>
+
+    {% comment %} <label for="section">Section:</label> {% endcomment %}
+    <select name="section" id="section" onchange="this.form.submit()">
+      <option disabled selected>Section</option>
+      <option value="">All</option>
+        {% for sec in sections %}
+        <option value="{{ sec }}" {% if selected_section == sec %}selected{% endif %}>{{ sec }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- <label for="section">Section:</label>
+    <select name="section" id="section">
+      <option value="">All</option>
+      
+    </select> -->
 
     {% comment %} <label for="year_level">Year Level</label> {% endcomment %}
     <select name="year_level" id="year_level" onchange="this.form.submit()">

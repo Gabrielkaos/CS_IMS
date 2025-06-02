@@ -70,6 +70,15 @@
           {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
         </option>
       {% endfor %}
+
+    </select>
+    {% comment %} <label for="section">Section:</label> {% endcomment %}
+    <select name="section" id="section" onchange="this.form.submit()">
+      <option disabled selected>Section</option>
+      <option value="">All</option>
+        {% for sec in sections %}
+        <option value="{{ sec }}" {% if selected_section == sec %}selected{% endif %}>{{ sec }}</option>
+      {% endfor %}
     </select>
 
     {% comment %} <label for="year_level">Year Level</label> {% endcomment %}
@@ -100,6 +109,14 @@
           {{ course.name }}
         </option>
       {% endfor %}
+    </select>
+    {% comment %} <label for="grade_filter">Grade Filter:</label> {% endcomment %}
+    <select name="grade_filter" id="grade_filter" onchange="this.form.submit()">
+      <option disabled selected>Grade</option>
+      <option value="">All</option>
+      <option value="gt3" {% if selected_grade_filter == 'gt3' %}selected{% endif %}>Above 3.0 (Failed)</option>
+      <option value="le3" {% if selected_grade_filter == 'le3' %}selected{% endif %}>3.0 or Below (Passed)</option>
+      <option value="none" {% if selected_grade_filter == 'none' %}selected{% endif %}>No Grades (Dropped)</option>
     </select>
   </form>
 </div>

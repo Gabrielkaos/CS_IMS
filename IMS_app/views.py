@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import openpyxl
-from django.db.models import Q
+from django.db.models import Q, F, ExpressionWrapper, FloatField
 from django.contrib.auth.decorators import user_passes_test
 
 def is_superuser(user):
@@ -374,11 +374,12 @@ def student_list(request):
     year_level = request.GET.get('year_level')
     subject_id = request.GET.get('subject')
     course_id = request.GET.get('course')
+    section = request.GET.get('section')  # NEW
 
     # Get all students through their enrollments
     students = Student.objects.all()
 
-    if school_year or semester or year_level or subject_id or course_id:
+    if school_year or semester or year_level or subject_id or course_id or section:
         enrollments = Enrollment.objects.all()
         
         if school_year:
@@ -387,6 +388,8 @@ def student_list(request):
             enrollments = enrollments.filter(semester=semester)
         if year_level:
             enrollments = enrollments.filter(year_level=year_level)
+        if section:
+            enrollments = enrollments.filter(section=section)
         if subject_id:
             enrollments = enrollments.filter(
                 enrollmentsubject__subject__id=subject_id
@@ -401,6 +404,7 @@ def student_list(request):
     # Get all school years for dropdown
     school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
     subjects = Subject.objects.all()
+    sections = Enrollment.objects.values_list('section', flat=True).distinct()
 
     form = UploadFileForm()
     return render(request, 'IMS_app/student_list.html', {
@@ -416,7 +420,9 @@ def student_list(request):
         'selected_subject': subject_id,
         'student_count': students.count(),
         "courses":Course.objects.all(),
-        "selected_course":course_id
+        "selected_course":course_id,
+        "selected_section":section,
+        "sections":sections
     })
 
 
@@ -427,12 +433,14 @@ def grade_list(request):
     year_level = request.GET.get('year_level')
     subject_id = request.GET.get('subject')
     course_id = request.GET.get('course')
-
+    section = request.GET.get('section') 
+    grade_filter = request.GET.get('grade_filter')
+    print("Grade filter",grade_filter)
 
     # Get all students through their enrollments
     students = Student.objects.all()
 
-    if school_year or semester or year_level or subject_id or course_id:
+    if school_year or semester or year_level or subject_id or course_id or section or grade_filter:
         enrollments = Enrollment.objects.all()
         
         if school_year:
@@ -441,20 +449,56 @@ def grade_list(request):
             enrollments = enrollments.filter(semester=semester)
         if year_level:
             enrollments = enrollments.filter(year_level=year_level)
+        if section:
+            enrollments = enrollments.filter(section=section)
         if subject_id:
             enrollments = enrollments.filter(
                 enrollmentsubject__subject__id=subject_id
             )
+        enrollment_subjects = EnrollmentSubject.objects.filter(enrollment__in=enrollments)
+        filtered_student_ids = set()
+        
+        for es in enrollment_subjects.select_related('enrollment__student'):
+            
+            if grade_filter == 'gt3':
+                if es.midterm_grade is not None and es.final_grade is not None:
+                    avg = (es.midterm_grade + es.final_grade) / 2
+                    if avg > 3.0:
+                        print(">3.0")
+                        filtered_student_ids.add(es.enrollment.student.student_id)
+            elif grade_filter == 'le3':
+                if es.midterm_grade is not None and es.final_grade is not None:
+                    avg = (es.midterm_grade + es.final_grade) / 2
+                    if avg <= 3.0:
+                        print("<=3.0")
+                        filtered_student_ids.add(es.enrollment.student.student_id)
+            elif grade_filter == 'none':
+                if es.midterm_grade is None or es.final_grade is None:
+                    print("none")
+                    filtered_student_ids.add(es.enrollment.student.student_id)
+            else:
+                # No grade filter, include all students
+                print("super none")
+                filtered_student_ids.add(es.enrollment.student.student_id)
+
+        # If no grade filter, include all students from the filtered enrollments
+        # if not grade_filter:
+        #     filtered_student_ids = set(enrollments.values_list('student_id', flat=True))
+        # Get the final student queryset
+        print(filtered_student_ids)
+        students = Student.objects.filter(student_id__in=filtered_student_ids)
         
         if course_id:
             course_obj = Course.objects.get(id=int(course_id))
-            students = Student.objects.filter(enrollments__in=enrollments,course=course_obj).distinct()
+            students = students.filter(enrollments__in=enrollments,course=course_obj).distinct()
         else:
-            students = Student.objects.filter(enrollments__in=enrollments).distinct()
+            students = students.filter(enrollments__in=enrollments).distinct()
 
     # Get all school years for dropdown
     school_years = Enrollment.objects.values_list('school_year', flat=True).distinct()
     subjects = Subject.objects.all()
+    sections = Enrollment.objects.values_list('section', flat=True).distinct()
+
 
     form = UploadFileForm()
     return render(request, 'IMS_app/grade_list.html', {
@@ -470,7 +514,10 @@ def grade_list(request):
         'selected_subject': subject_id,
         'student_count': students.count(),
         "courses":Course.objects.all(),
-        "selected_course":course_id
+        "selected_course":course_id,
+        "selected_section":section,
+        "sections":sections,
+        'selected_grade_filter': grade_filter
     })
 
 def save_grades(request, pk):
