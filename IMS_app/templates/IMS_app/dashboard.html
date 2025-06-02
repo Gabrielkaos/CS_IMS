@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<h1 style="color: #333; margin-bottom: 1em; margin-left: 8px">CS Information Management</h1>
+<h1 style="color: #333; margin-bottom: 1em; margin-left: 8px">CS Management Information System</h1>
 
 <div class="dashboard-container">
 
@@ -114,7 +114,7 @@
       <tbody>
         {% for item in course_data %}
         <tr>
-          <td>{{ item.course__name }}</td>
+          <td>{{ item.student__course__name }}</td>
           <td>{{ item.count }}</td>
         </tr>
         {% endfor %}
