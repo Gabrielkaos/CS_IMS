@@ -464,28 +464,28 @@ def grade_list(request):
                 if es.midterm_grade is not None and es.final_grade is not None:
                     avg = (es.midterm_grade + es.final_grade) / 2
                     if avg > 3.0:
-                        print(">3.0")
+                        # print(">3.0")
                         filtered_student_ids.add(es.enrollment.student.student_id)
             elif grade_filter == 'le3':
                 if es.midterm_grade is not None and es.final_grade is not None:
                     avg = (es.midterm_grade + es.final_grade) / 2
                     if avg <= 3.0:
-                        print("<=3.0")
+                        # print("<=3.0")
                         filtered_student_ids.add(es.enrollment.student.student_id)
             elif grade_filter == 'none':
                 if es.midterm_grade is None or es.final_grade is None:
-                    print("none")
+                    # print("none")
                     filtered_student_ids.add(es.enrollment.student.student_id)
             else:
                 # No grade filter, include all students
-                print("super none")
+                # print("super none")
                 filtered_student_ids.add(es.enrollment.student.student_id)
 
         # If no grade filter, include all students from the filtered enrollments
         # if not grade_filter:
         #     filtered_student_ids = set(enrollments.values_list('student_id', flat=True))
         # Get the final student queryset
-        print(filtered_student_ids)
+        # print(filtered_student_ids)
         students = Student.objects.filter(student_id__in=filtered_student_ids)
         
         if course_id:
