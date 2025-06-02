@@ -43,6 +43,15 @@ body {
     border-top-right-radius: .5em;
 }
 
+
+.table tbody tr:first-child {
+    border-bottom-left-radius: .5em;
+}
+
+.table tbody tr:last-child {
+    border-bottom-right-radius: .5em;
+}
+
 .table tr:nth-child(n+11) { 
     display: none;
 }
@@ -64,9 +73,9 @@ body {
     background-color: #f3f3f3;
 }
 
-.table tbody tr:last-of-type {
+/* .table tbody tr:last-of-type {
     border-bottom: 2px solid var(--head-color);
-}
+} */
 
 .table tbody tr.active-row {
     font-weight: bold;

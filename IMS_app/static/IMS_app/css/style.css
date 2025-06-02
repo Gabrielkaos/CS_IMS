@@ -164,6 +164,136 @@ main p {
     margin-bottom: 15px;
 }
 
+.dashboard-container {
+    height: 85vh;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 550px 550px 400px;
+    grid-template-rows: 60px 320px 320px;
+    grid-template-areas:
+        "filters filters filters"
+        "student-per-course student-year-level top-metrics"
+        "top-sub top-sub none"
+    ;
+
+    gap: 2em;
+    overflow: hidden;
+
+}
+
+.top-subjects-container {
+    color: var(--line-color);
+    transition: transform 0.2s ease;
+    padding: 20px 40px 20px 5px;
+    border: 2px solid var(--third-color);
+    border-radius: 16px;
+}
+
+.top-subjects-container:hover {
+    transform: translateY(-10px);
+}
+
+.top-subjects-container table {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.top-subjects-container h4 {
+    margin-left: 20px;
+    font-size: 1.4em;
+    color: var(--accent-color);
+}
+
+.top-metrics-container {
+    color: var(--line-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.top-metrics-container h5 {
+    font-size: 1em;
+}
+
+.top-metrics-container h3 {
+    font-size: 2em;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--fourth-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 180px;
+    height: 150px;
+    padding: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+
+.student-year-level-container {
+    color: var(--line-color);
+    transition: transform 0.2s ease;
+    padding: 20px 40px 20px 5px;
+    border: 2px solid var(--third-color);
+    border-radius: 16px;
+}
+
+.student-year-level-container table {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.student-year-level-container h4 {
+    margin-left: 20px;
+    font-size: 1.4em;
+    color: var(--accent-color);
+}
+
+.student-year-level-container:hover {
+    transform: translateY(-10px);
+}
+
+.student-per-course-container {
+    color: var(--line-color);
+    transition: transform 0.2s ease;
+    padding: 20px 40px 20px 5px;
+    border: 2px solid var(--third-color);
+    border-radius: 16px;
+}
+
+.student-per-course-container table {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+
+.student-per-course-container h4 {
+    margin-left: 20px;
+    font-size: 1.4em;
+    color: var(--accent-color);
+}
+
+.student-per-course-container:hover {
+    transform: translateY(-10px);
+}
+
 .wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
