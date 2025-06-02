@@ -4,18 +4,20 @@
 {% block content %}
 <h1 style="color: #333; margin-bottom: 1em; margin-left: 8px">CS Information Management</h1>
 
-<div>
-
-  <form method="get" style="margin-bottom: 1.5em;">
-      <label for="sy">School Year:</label>
+<div class="filter-container">
+  <form method="get" style="margin-bottom: 1.5em;" class="dropdown-filters">
+      {% comment %} <label for="sy">School Year:</label> {% endcomment %}
       <select name="sy" id="sy" onchange="this.form.submit()">
+        <option disabled selected>School Year</option>
         {% for year in all_school_years %}
           <option value="{{ year }}" {% if year == selected_sy %}selected{% endif %}>{{ year }}</option>
         {% endfor %}
       </select>
 
-      <label for="sem">Semester:</label>
+      {% comment %} <label for="sem">Semester:</label> {% endcomment %}
       <select name="sem" id="sem" onchange="this.form.submit()">
+        <option disabled selected>Semester</option>
+        <option value="" {% if selected_sem == 1 %}selected{% endif %}>All</option>
         <option value="1" {% if selected_sem == 1 %}selected{% endif %}>1st Semester</option>
         <option value="2" {% if selected_sem == 2 %}selected{% endif %}>2nd Semester</option>
         <option value="3" {% if selected_sem == 3 %}selected{% endif %}>Summer</option>
@@ -60,8 +62,6 @@
 
   <!-- Current SY and Semester -->
    
-
-  
 
   <!-- Top Subjects -->
   <h4>📘 Top Subjects by Student Enrollment</h4>

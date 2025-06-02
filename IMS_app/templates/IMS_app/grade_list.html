@@ -41,7 +41,6 @@
     <form
       method="post"
       enctype="multipart/form-data"
-      class="form-container"
       action="{% url 'upload_grades' %}"
     >
       {% csrf_token %} {{ form.as_p }}
@@ -51,27 +50,30 @@
 </div>
 
 
-<form method="get" style="margin-bottom: 1em;">
+<div class="filter-container">
+  <form method="get" style="margin-bottom: 1em;" class="dropdown-filters">
+    {% comment %} <label for="year_level">Year Level</label> {% endcomment %}
+    <select name="year_level" id="year_level" onchange="this.form.submit()">
+      <option disabled selected>Year Level</option>
+      <option value="">All</option>
+      {% for year in year_levels %}
+        <option value="{{ year }}" {% if selected_year_level == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
 
-  <label for="year_level">Year Level</label>
-  <select name="year_level" id="year_level" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for year in year_levels %}
-      <option value="{{ year }}" {% if selected_year_level == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
-    {% endfor %}
-  </select>
 
-
-  <label for="course">Course:</label>
-  <select name="course" id="course" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for course in courses %}
-      <option value="{{ course.id }}" {% if selected_course == course.id|stringformat:"s" %}selected{% endif %}>
-        {{ course.name }}
-      </option>
-    {% endfor %}
-  </select>
-</form>
+    {% comment %} <label for="course">Course:</label> {% endcomment %}
+    <select name="course" id="course" onchange="this.form.submit()">
+      <option disabled selected>Course</option>
+      <option value="">All</option>
+      {% for course in courses %}
+        <option value="{{ course.id }}" {% if selected_course == course.id|stringformat:"s" %}selected{% endif %}>
+          {{ course.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
 
 
 <p style="color: black;"><strong>Total Students:</strong> {{ student_count }}</p>
