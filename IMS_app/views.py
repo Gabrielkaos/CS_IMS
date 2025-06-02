@@ -62,10 +62,12 @@ def upload_grades(request):
 
 
             # course_obj = Course.objects.get(name=course)
-            
-            subject_obj = Subject.objects.get(
-                description = subject_description.strip()
-            )
+            try:
+                subject_obj = Subject.objects.get(
+                    description = subject_description.strip()
+                )
+            except:
+                return redirect("grade_list")
 
             for row in sheet.iter_rows(min_row=9, values_only=True):
                 if not row[1]:

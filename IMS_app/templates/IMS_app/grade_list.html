@@ -51,7 +51,27 @@
 
 
 <div class="filter-container">
-  <form method="get" style="margin-bottom: 1em;" class="dropdown-filters">
+  <form method="get" style="margin-bottom: 1em;"  class="dropdown-filters">
+    {% comment %} <label for="school_year">School Year:</label> {% endcomment %}
+    <select name="school_year" id="school_year" onchange="this.form.submit()">
+      <option disabled selected>School Year</option>
+      <option value="">All</option>
+      {% for year in school_years %}
+        <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+
+    {% comment %} <label for="semester">Semester:</label> {% endcomment %}
+    <select name="semester" id="semester" onchange="this.form.submit()">
+      <option disabled selected>Semester</option>
+      <option value="">All</option>
+      {% for sem in semesters %}
+        <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
+          {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
+        </option>
+      {% endfor %}
+    </select>
+
     {% comment %} <label for="year_level">Year Level</label> {% endcomment %}
     <select name="year_level" id="year_level" onchange="this.form.submit()">
       <option disabled selected>Year Level</option>
@@ -61,11 +81,20 @@
       {% endfor %}
     </select>
 
+    {% comment %} <label for="subject">Subject:</label> {% endcomment %}
+    <select name="subject" id="subject" onchange="this.form.submit()">
+      <option disabled selected>Subject</option>
+      <option value="">All</option>
+      {% for subject in subjects %}
+        <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+          {{ subject.code }} - {{ subject.description }}
+        </option>
+      {% endfor %}
+    </select>
 
     {% comment %} <label for="course">Course:</label> {% endcomment %}
     <select name="course" id="course" onchange="this.form.submit()">
-      <option disabled selected>Course</option>
-      <option value="">All</option>
+      <option value="">Course</option>
       {% for course in courses %}
         <option value="{{ course.id }}" {% if selected_course == course.id|stringformat:"s" %}selected{% endif %}>
           {{ course.name }}
