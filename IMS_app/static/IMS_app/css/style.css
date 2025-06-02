@@ -245,6 +245,42 @@ main p {
     border-color: #949494;       
 }
 
+.student-info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 1em;
+    width: 100%;
+    height: 100px;
+    margin-left: 5px;
+}
+.name-container input{
+    width: 100px;
+    height: 50px;
+}
+
+.subjects-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+    width: 100%;
+    height: 100%;
+}
+
+.subjects-container h2 {
+    color: var(--line-color);
+}
+
+.subjects-container ul {
+    padding: 5px 25px;
+}
+.subjects-container li::marker {
+    content: "📌  "; 
+    font-size: 1.2em;
+  }
+
 /* <===== MENU =====> */
 .menu-2-container {
     height: 80px;
@@ -487,6 +523,45 @@ main p {
 }
 
 
+.edit-grades-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 150px;
+    border: none;
+    border-radius: .5em;
+    cursor: pointer;
+    background-color: var(--accent-color);
+    margin-bottom: 10px;
+    
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.edit-grades-button:hover {
+    transition: color 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+
+.edit-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 70px;
+    border: none;
+    border-radius: .5em;
+    cursor: pointer;
+    background-color: #e2dfd5;
+    margin-bottom: 10px;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--line-color);
+}
+
 
 /* <===== CALENDAR =====> */
 
@@ -664,12 +739,12 @@ textarea:focus {
 }
 
 .other-student-form-container {
+    height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 320px 500px;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
     grid-template-areas:
-        "box1 box3"
-        "box2 box4"
+        "box1 box1"
     ;
     color: #333;
     gap: 1em;
@@ -769,7 +844,7 @@ textarea:focus {
     }
     #sidebar {
         z-index: 1;
-        height: 70px;
+        height: 60px;
         width: 100%;
         border-radius: 0;
         padding: 0;

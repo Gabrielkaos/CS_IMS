@@ -8,61 +8,66 @@
     </button>
 </div>
 
-<form method="get" style="margin-bottom: 1em;">
-  <label for="school_year">School Year:</label>
-  <select name="school_year" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for year in school_years %}
-      <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
-    {% endfor %}
-  </select>
+<div class="filter-container">
+  <form method="get" style="margin-bottom: 1em;"  class="dropdown-filters">
+    {% comment %} <label for="school_year">School Year:</label> {% endcomment %}
+    <select name="school_year" onchange="this.form.submit()">
+      <option disabled selected>School Year</option>
+      <option value="">All</option>
+      {% for year in school_years %}
+        <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
 
-  <label for="semester">Semester:</label>
-  <select name="semester" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for sem in semesters %}
-      <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
-        {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
-      </option>
-    {% endfor %}
-  </select>
+    {% comment %} <label for="semester">Semester:</label> {% endcomment %}
+    <select name="semester" onchange="this.form.submit()">
+      <option disabled selected>Semester</option>
+      <option value="">All</option>
+      {% for sem in semesters %}
+        <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
+          {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
+        </option>
+      {% endfor %}
+    </select>
 
-  <label for="year_level">Year Level:</label>
-  <select name="year_level" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for y in year_levels %}
-      <option value="{{ y }}" {% if selected_year_level == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
-    {% endfor %}
-  </select>
-</form>
+    {% comment %} <label for="year_level">Year Level:</label> {% endcomment %}
+    <select name="year_level" onchange="this.form.submit()">
+      <option disabled selected>Year Level</option>
+      <option value="">All</option>
+      {% for y in year_levels %}
+        <option value="{{ y }}" {% if selected_year_level == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
 
 <div class="student-info">
   <h2>{{ student.name }} ({{ student.student_id }})</h2>
   <p style="color: black;"><strong>Course:</strong> {{ student.course }}</p>
 </div>
 
-<hr>
 
 {% for enrollment, subjects in enrollments.items %}
-  <h3>{{ enrollment.school_year }} - {{ enrollment.semester }} Semester - Year {{ enrollment.year_level }}</h3>
-  <table>
+  <h3 style="margin-left: 5px;">{{ enrollment.school_year }} - {{ enrollment.semester }} Semester - Year {{ enrollment.year_level }}</h3>
+  
+  <table class="table" style="margin-left: 0px;">
     <thead>
       <tr>
-        <th>Subject Code</th>
-        <th>Description</th>
-        <th>Midterm Grade</th>
-        <th>Final Grade</th>
-        <th>Average</th>
+        <th data-title="Subject Code">Subject Code</th>
+        <th data-title="Description">Description</th>
+        <th data-title="Midterm Grade">Midterm Grade</th>
+        <th data-title="Final Grade">Final Grade</th>
+        <th data-title="Average">Average</th>
       </tr>
     </thead>
     <tbody>
       {% for es in subjects %}
         <tr>
-          <td>{{ es.subject.code }}</td>
-          <td>{{ es.subject.description }}</td>
-          <td>{{ es.midterm_grade }}</td>
-          <td>{{ es.final_grade }}</td>
-          <td>
+          <td data-title="Subject Code">{{ es.subject.code }}</td>
+          <td data-title="Description">{{ es.subject.description }}</td>
+          <td data-title="Midterm Grade">{{ es.midterm_grade }}</td>
+          <td data-title="Final Grade">{{ es.final_grade }}</td>
+          <td data-title="Average">
             {% if es.midterm_grade and es.final_grade %}
               {{ es.average }}
             {% else %}

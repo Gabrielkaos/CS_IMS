@@ -17,16 +17,16 @@
 .modal-content {
     gap: 1.5em;
     display: grid;
-    height: 98%;
-    max-width: 1000px;
+    height: 50%;
+    max-width: 500px;
     width: 100%;
     margin: 0 5px;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 50px 60px;
     grid-template-areas: 
-        "info1 info2"
-        "info1 info2"
-        "info3 info4"
+        "info1 info1"
+        "info4 info4"
+        "info3 info3"
     ;
     background-color: #fff;
     color: #333;
@@ -37,16 +37,16 @@
 .faculty-modal-content {
     gap: 1.5em;
     display: grid;
-    height: 98%;
-    max-width: 1000px;
+    height: 50%;
+    max-width: 500px;
     width: 100%;
     margin: 0 5px;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 50px 60px;
     grid-template-areas: 
-        "info1 info2"
-        "info1 info2"
-        "info3 info4"
+        "info1 info1"
+        "info4 info4"
+        "info3 info3"
     ;
     background-color: #fff;
     color: #333;
@@ -61,11 +61,11 @@
     width: 100%;
     margin: 0 5px;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 220px 220px;
+    grid-template-rows: 250px 50px 50px;
     grid-template-areas: 
         "info1 info1"
-        "info2 info2"
-        "info3 info4"
+        "info4 info4"
+        "info3 info3"
     ;
     background-color: #fff;
     color: #333;
@@ -383,34 +383,32 @@
 
 @media (max-width: 425px) {
     .modal-content {
-        height: 1760px;
+        height: 55%;
         width: 100%;
         margin: 0 10px;
         grid-template-columns: 1fr;
-        grid-template-rows: 750px;
+        grid-template-rows: 300px 50px 50px;
         grid-template-areas: 
             "info1"
-            "info2"
             "info4"
             "info3"
         ;
-        margin-top: 1150px;
+        margin-top: 10px;
         margin-bottom: 10px;
         padding: 1.5em;
     }
     .faculty-modal-content  {
-        height: 1400px;
+        height: 55%;
         width: 100%;
         margin: 0 10px;
         grid-template-columns: 1fr;
-        grid-template-rows: 450px 1fr 50px 50px;
+        grid-template-rows: 300px 50px 50px;
         grid-template-areas: 
             "info1"
-            "info2"
             "info4"
             "info3"
         ;
-        margin-top: 800px;
+        margin-top: 10px;
         margin-bottom: 10px;
         padding: 1.5em;
     }

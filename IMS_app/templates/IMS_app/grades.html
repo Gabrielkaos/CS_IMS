@@ -8,44 +8,50 @@
       </button>
       <h2 style="color: #333; margin-bottom: 1em">Grades</h2>
 </div>
-<br>
-<br>
+
 <div class="student-info">
   <h2>{{ student.name }} ({{ student.student_id }})</h2>
   <p style="color: black;"><strong>Course:</strong> {{ student.course }}</p>
 </div>
 
-<form method="get" style="margin-bottom: 1em;">
-  <label for="school_year">School Year:</label>
-  <select name="school_year" id="school_year" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for year in school_years %}
-      <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
-    {% endfor %}
-  </select>
+<div class="filter-container">
+  <form method="get" style="margin-bottom: 1em;" class="dropdown-filters">
+    {% comment %} <label for="school_year">School Year:</label> {% endcomment %}
+    <select name="school_year" id="school_year" onchange="this.form.submit()">
+      <option disabled selected>School Year</option>
+      <option value="">All</option>
+      {% for year in school_years %}
+        <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
 
-  <label for="semester">Semester:</label>
-  <select name="semester" id="semester" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for sem in semesters %}
-      <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
-        {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
-      </option>
-    {% endfor %}
-  </select>
+    {% comment %} <label for="semester">Semester:</label> {% endcomment %}
+    <select name="semester" id="semester" onchange="this.form.submit()">
+      <option disabled selected>Semester</option>
+      <option value="">All</option>
+      {% for sem in semesters %}
+        <option value="{{ sem }}" {% if selected_semester == sem|stringformat:"s" %}selected{% endif %}>
+          {{ sem }}{% if sem == 1 %}st{% elif sem == 2 %}nd{% elif sem == 3 %} (Summer){% endif %} Semester
+        </option>
+      {% endfor %}
+    </select>
 
-  <label for="subject">Subject:</label>
-  <select name="subject" id="subject" onchange="this.form.submit()">
-    <option value="">All</option>
-    {% for subject in subjects %}
-      <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
-        {{ subject.code }} - {{ subject.description }}
-      </option>
-    {% endfor %}
-  </select>
-</form>
+    {% comment %} <label for="subject">Subject:</label> {% endcomment %}
+    <select name="subject" id="subject" onchange="this.form.submit()">
+      <option disabled selected>Subject</option>
+      <option value="">All</option>
+      {% for subject in subjects %}
+        <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+          {{ subject.code }} - {{ subject.description }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
 
-<button type="button" id="toggle-edit" class="edit-button">Edit Grades</button>
+<button type="button" id="toggle-edit" class="edit-grades-button">Edit Grades</button>
+
+
 <form method="post" action="{% url 'save_grades' student.pk %}" id="grades-form">
   {% csrf_token %}
   <table id="students" class="table">

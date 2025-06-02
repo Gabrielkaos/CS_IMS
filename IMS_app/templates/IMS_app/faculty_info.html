@@ -8,12 +8,14 @@
       </button>
       <h2>{{ faculty.first_name }}'s Full Details</h2>
     </div>
-    <div class="form-group">
+
+    <div class="name-container">
       <label>Name</label>
-      <input type="text" value="{{ faculty.name }}" readonly />
+      <input style="width: 700px;" type="text" value="{{ faculty.name }}" readonly />
     </div>
-    <div  class="form-group">
-      <label>Subjects</label>
+
+    <div class="subjects-container">
+      <h2>Subjects</h2>
       <ul>
         {% for sub in subjects %}
         <li style="color: black;">
