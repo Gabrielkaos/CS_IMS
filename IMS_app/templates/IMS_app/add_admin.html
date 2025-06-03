@@ -1,20 +1,31 @@
 {% extends 'IMS_app/base.html' %}
 {% block content %}
-<div class="create-admin-container">
 
-  <form method="post" class="create-admin-form-box">
-    <h1>Create Admin</h1>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="create-admin-btn" type="submit">Create Admin</button>
-  </form>
+<div class="modal-wrapper">
+    <div class="create-admin-container">
 
-  {% if messages %}
-    {% for message in messages %}
-      <p>{{ message }}</p>
-    {% endfor %}
-  {% endif %}
+      <form method="post" class="create-admin-form-box">
+        <div class="header">
+          <button class="back-button" onclick="window.location.href='{% url 'faculty_list' %}'">
+              <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#F3F3F3"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+          </button>
+          <h2 style="font-size: 2em;">Create Admin</h2>
+        </div>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="create-admin-btn" type="submit">Create Admin</button>
+        <button class="create-acc-btn" onclick="window.location.href='{% url 'dashboard' %}'" >
+          <span>Cancel</span>
+        </button>
+      </form>
 
+      {% if messages %}
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+    </div>
 </div>
 
 {% endblock %}

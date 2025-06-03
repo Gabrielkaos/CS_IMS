@@ -182,10 +182,17 @@ main p {
 
 }
 
+.title-container {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: transparent;
+}
+
 .top-subjects-container {
     color: var(--line-color);
     transition: transform 0.2s ease;
-    padding: 20px 40px 20px 5px;
+    padding: 0px 40px 20px 5px;
     border: 2px solid var(--third-color);
     border-radius: 16px;
     overflow-y: auto;
@@ -203,6 +210,14 @@ main p {
     margin-left: 20px;
     font-size: 1.4em;
     color: var(--accent-color);
+    position: sticky;
+    top: 10px;
+    background-color: var(--primary-color);
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
 }
 
 .top-metrics-container {
@@ -263,6 +278,13 @@ main p {
     margin-left: 20px;
     font-size: 1.4em;
     color: var(--accent-color);
+    top: 10px;
+    background-color: var(--primary-color);
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
 }
 
 .student-year-level-container table {
@@ -295,7 +317,7 @@ main p {
 .student-year-level-container thead th,
 .student-per-course-container thead th {
     position: sticky; /* Optional: keep header visible */
-    top: 0;
+    top: 50px;
     z-index: 1;
 }
 
@@ -303,6 +325,13 @@ main p {
     margin-left: 20px;
     font-size: 1.4em;
     color: var(--accent-color);
+    top: 10px;
+    background-color: var(--primary-color);
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
 }
 
 .student-per-course-container:hover {
@@ -668,6 +697,7 @@ main p {
     border: none;
     cursor: #fff;
     font-size: 16px;
+    font-weight: 600;
     color: #fff;
     margin-bottom: 20px;
     transition: 0.5s;
@@ -676,6 +706,30 @@ main p {
 /* Hover effect */
 .create-admin-btn:hover {
     background-color: var(--hover-color);
+    cursor: pointer;
+    transition: color 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+}
+
+
+.create-acc-btn {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 2px solid var(--third-color);
+    border-radius: 6px;
+    cursor: #fff;
+    font-size: 16px;
+    color: var(--third-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+    transition: 0.5s;
+}
+
+/* Hover effect */
+.create-acc-btn:hover {
+    background-color: #f3f3f3;
+    color:  var(--hover-color);
     cursor: pointer;
     transition: color 0.3s ease, background 0.3s ease;
     box-shadow: 0 0 5px rgb(0, 0, 0);
